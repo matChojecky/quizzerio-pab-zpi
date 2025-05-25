@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quizzerio.Api", "Quizzerio.Api\Quizzerio.Api.csproj", "{4C6905A7-D6ED-4617-BE74-D08483695D30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quizzerio.Client", "Quizzerio.Client\Quizzerio.Client.csproj", "{A132EC49-6738-45D9-8C8B-40515F9D068B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quizzerio.CMS", "Quizzerio.CMS\Quizzerio.CMS.csproj", "{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C6905A7-D6ED-4617-BE74-D08483695D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C6905A7-D6ED-4617-BE74-D08483695D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C6905A7-D6ED-4617-BE74-D08483695D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C6905A7-D6ED-4617-BE74-D08483695D30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A132EC49-6738-45D9-8C8B-40515F9D068B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A132EC49-6738-45D9-8C8B-40515F9D068B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A132EC49-6738-45D9-8C8B-40515F9D068B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A132EC49-6738-45D9-8C8B-40515F9D068B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "wWXb7m/Fk1vGb4L2CLTekFQwZOLmsomisn0VUzhpLio=",
+  "Source": "Quizzerio.Api",
+  "BasePath": "_content/Quizzerio.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
