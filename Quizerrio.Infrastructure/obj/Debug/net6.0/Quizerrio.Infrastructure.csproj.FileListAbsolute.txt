@@ -1,0 +1,12 @@
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/bin/Debug/net6.0/Quizerrio.Infrastructure.deps.json
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/bin/Debug/net6.0/Quizerrio.Infrastructure.dll
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/bin/Debug/net6.0/Quizerrio.Infrastructure.pdb
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/Quizerrio.Infrastructure.csproj.AssemblyReference.cache
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/Quizerrio.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/Quizerrio.Infrastructure.AssemblyInfoInputs.cache
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/Quizerrio.Infrastructure.AssemblyInfo.cs
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/Quizerrio.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/Quizerrio.Infrastructure.dll
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/refint/Quizerrio.Infrastructure.dll
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/Quizerrio.Infrastructure.pdb
+/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerrio.Infrastructure/obj/Debug/net6.0/ref/Quizerrio.Infrastructure.dll

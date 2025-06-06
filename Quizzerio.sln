@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quizzerio.Client", "Quizzer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quizzerio.CMS", "Quizzerio.CMS\Quizzerio.CMS.csproj", "{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quizerio.Domain", "Quizerio.Domain\Quizerio.Domain.csproj", "{56DEF58E-E2A4-420D-BC0D-F72EEE6BEC58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quizerrio.Infrastructure", "Quizerrio.Infrastructure\Quizerrio.Infrastructure.csproj", "{774A667C-794A-4035-A8E6-9F9649DB4C67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCD619F3-3A91-48A3-B1B7-37E0FAC1011B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56DEF58E-E2A4-420D-BC0D-F72EEE6BEC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56DEF58E-E2A4-420D-BC0D-F72EEE6BEC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56DEF58E-E2A4-420D-BC0D-F72EEE6BEC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56DEF58E-E2A4-420D-BC0D-F72EEE6BEC58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{774A667C-794A-4035-A8E6-9F9649DB4C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{774A667C-794A-4035-A8E6-9F9649DB4C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{774A667C-794A-4035-A8E6-9F9649DB4C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{774A667C-794A-4035-A8E6-9F9649DB4C67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
