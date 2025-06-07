@@ -1,0 +1,17 @@
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/bin/Debug/net6.0/Quizerio.Infrastructure.deps.json
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/bin/Debug/net6.0/Quizerio.Infrastructure.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/bin/Debug/net6.0/Quizerio.Infrastructure.pdb
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/bin/Debug/net6.0/Quizerio.Application.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/bin/Debug/net6.0/Quizerio.Domain.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/bin/Debug/net6.0/Quizerio.Application.pdb
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/bin/Debug/net6.0/Quizerio.Domain.pdb
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/Quizerio.Infrastructure.csproj.AssemblyReference.cache
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/Quizerio.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/Quizerio.Infrastructure.AssemblyInfoInputs.cache
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/Quizerio.Infrastructure.AssemblyInfo.cs
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/Quizerio.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/Quizerio.Infrastructure.csproj.CopyComplete
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/Quizerio.Infrastructure.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/refint/Quizerio.Infrastructure.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/Quizerio.Infrastructure.pdb
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/obj/Debug/net6.0/ref/Quizerio.Infrastructure.dll
