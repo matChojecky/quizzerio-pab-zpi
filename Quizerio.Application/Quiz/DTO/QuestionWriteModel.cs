@@ -4,13 +4,15 @@ namespace Quizerio.Application.Quiz.DTO
 {
     public class QuestionWriteModel
     {
-        public readonly List<AnswerWriteModel> Answers;
+        public List<AnswerWriteModel> Answers { get; set; }
 
-        public Guid CategoryId;
+        public Guid CategoryId { get; set; }
 
-        public readonly QuestionDifficulty Difficulty;
+        public QuestionDifficulty Difficulty { get; set; }
         
-        public readonly string QuestionText;
+        public string QuestionText { get; set; }
+        
+        public QuestionWriteModel() {}
 
         protected QuestionWriteModel(string questionText, QuestionDifficulty difficulty, List<AnswerWriteModel> answers,
             Guid categoryId)
@@ -22,13 +24,16 @@ namespace Quizerio.Application.Quiz.DTO
         }
     }
 
-    public abstract class AnswerWriteModel
+    public class AnswerWriteModel
     {
-        public readonly bool IsCorrect;
-        public readonly string Text;
+        public Guid? Id { get; set; }
+        public bool IsCorrect { get; set; }
+        public string Text { get; set; }
 
-        protected AnswerWriteModel(string text, bool isCorrect)
+        public AnswerWriteModel() {}
+        protected AnswerWriteModel(Guid? id, string text, bool isCorrect)
         {
+            Id = id;
             Text = text;
             IsCorrect = isCorrect;
         }

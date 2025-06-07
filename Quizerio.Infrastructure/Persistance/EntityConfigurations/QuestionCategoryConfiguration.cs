@@ -17,9 +17,6 @@ namespace Quizerio.Infrastructure.Persistance.EntityConfigurations
                 .IsRequired()
                 .HasMaxLength(100);
 
-            configuration.HasMany(c => c.Questions)
-                .WithOne(q => q.Category)
-                .HasForeignKey(q => q.Category.Id);
         }
     }
 }

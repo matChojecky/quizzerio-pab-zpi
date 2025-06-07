@@ -17,5 +17,7 @@ namespace Quizerio.Application.Quiz
         void EditQuestion(UpdateQuestionCommand command);
         
         void AddQuestionCategory(AddQuestionCategoryCommand command);
+
+        List<QuestionCategory> GetQuestionCategories();
     }
 }

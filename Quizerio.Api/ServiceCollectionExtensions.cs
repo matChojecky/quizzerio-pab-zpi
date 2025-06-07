@@ -30,7 +30,7 @@ namespace Quizerio.Api
         private static IServiceCollection AddDataServices(this IServiceCollection services)
         {
             services.AddDbContext<EfDbContext>(options =>
-                options.UseSqlite("Data Source = ./Quizerio.db")
+                options.UseSqlite("Data Source = Quizerio.db")
             );
             
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();

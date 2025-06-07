@@ -26,5 +26,12 @@ namespace Quizerio.Api.Controllers
             return CreatedAtAction(null, null);
         }
 
+        [HttpGet]
+        public IActionResult ListAll()
+        {
+            var categories = _quizzFacade.GetQuestionCategories();
+            
+            return Ok(categories);
+        }
     }
 }
