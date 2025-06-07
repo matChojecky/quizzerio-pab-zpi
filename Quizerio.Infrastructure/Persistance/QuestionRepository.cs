@@ -23,7 +23,7 @@ namespace Quizerio.Infrastructure.Persistance
                     q.SetProperty(it => it.Status, status)
                 );
         }
-        
+
         protected override IQueryable<Question> QueryWithIncludes()
         {
             return _questions.Include(q => q.Category);

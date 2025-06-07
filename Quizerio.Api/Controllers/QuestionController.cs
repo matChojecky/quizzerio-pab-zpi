@@ -1,9 +1,10 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
 using Quizerio.Application.Quiz.DTO;
 using Quizerio.Application.Quiz.Queries;
-
 
 namespace Quizerio.Api.Controllers
 {
@@ -67,7 +68,7 @@ namespace Quizerio.Api.Controllers
                 questionWriteModel.CategoryId
             );
             _quizzFacade.EditQuestion(command);
-            
+
             return NoContent();
         }
 
@@ -77,7 +78,7 @@ namespace Quizerio.Api.Controllers
         {
             var command = new DeleteQuestionCommand(questionId);
             _quizzFacade.DeleteQuestion(command);
-            
+
             return NoContent();
         }
 
@@ -86,9 +87,9 @@ namespace Quizerio.Api.Controllers
         public IActionResult Get(Guid questionId)
         {
             var query = new GetQuestionQuery(questionId);
-            
+
             var question = _quizzFacade.GetQuestion(query);
-            
+
             return Ok(question);
         }
 
@@ -99,6 +100,5 @@ namespace Quizerio.Api.Controllers
             var questions = _quizzFacade.GetQuestions(query);
             return Ok(questions);
         }
-        
     }
 }

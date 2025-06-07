@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Quizerio.Infrastructure\Quizerio.Infrastructure.csproj" />
+        <ProjectReference Include="..\Quizerio.Infrastructure\Quizerio.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -1,3 +1,5 @@
+using System;
+
 namespace Quizerio.Domain.Quiz.Model
 {
     public class QuestionCategory

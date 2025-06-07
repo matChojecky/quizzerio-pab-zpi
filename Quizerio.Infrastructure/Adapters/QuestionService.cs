@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Quizerio.Application;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
@@ -9,8 +12,8 @@ namespace Quizerio.Infrastructure.Adapters
 {
     public class QuestionService : IQuestionService
     {
-        private readonly IQuestionRepository _questionRepository;
         private readonly IQuestionCategoryRepository _questionCategoryRepository;
+        private readonly IQuestionRepository _questionRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public QuestionService(
@@ -32,8 +35,9 @@ namespace Quizerio.Infrastructure.Adapters
 
         public void AddQuestion(CreateQuestionCommand command)
         {
-            List<Answer> answers = command.Answers.Select(a => new Answer(a.Id ?? Guid.NewGuid(), a.Text, a.IsCorrect)).ToList();
-            QuestionCategory category = _questionCategoryRepository.GetById(command.CategoryId);
+            List<Answer> answers = command.Answers.Select(a => new Answer(a.Id ?? Guid.NewGuid(), a.Text, a.IsCorrect))
+                .ToList();
+            var category = _questionCategoryRepository.GetById(command.CategoryId);
 
             var question = new Question(
                 Guid.NewGuid(),
@@ -54,9 +58,24 @@ namespace Quizerio.Infrastructure.Adapters
             _unitOfWork.Commit();
         }
 
-        public void UpdateQuestion(UpdateQuestionCommand updateQuestion)
+        public void UpdateQuestion(UpdateQuestionCommand command)
         {
-            throw new NotImplementedException();
+            var current = _questionRepository.GetById(command.Id);
+            
+            var category = _questionCategoryRepository.GetById(command.CategoryId);
+
+            
+            var question = new Question(
+                current.Id,
+                command.QuestionText,
+                command.Difficulty,
+                QuestionStatus.Pending,
+                command.Answers.Select(a => new Answer(a.Id ?? throw new ArgumentException("Cannot perform update"), a.Text, a.IsCorrect)).ToList(),
+                category
+            );
+            
+            _questionRepository.Update(question);
+            _unitOfWork.Commit();
         }
 
         public Question GetQuestion(GetQuestionQuery query)

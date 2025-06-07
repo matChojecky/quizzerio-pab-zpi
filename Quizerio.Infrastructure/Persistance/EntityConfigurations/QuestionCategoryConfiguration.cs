@@ -16,7 +16,6 @@ namespace Quizerio.Infrastructure.Persistance.EntityConfigurations
             configuration.Property(c => c.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-
         }
     }
 }

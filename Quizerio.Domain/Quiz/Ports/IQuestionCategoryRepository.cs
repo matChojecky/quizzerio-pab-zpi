@@ -5,6 +5,5 @@ namespace Quizerio.Domain.Quiz.Ports
 {
     public interface IQuestionCategoryRepository : IRepository<QuestionCategory>
     {
-        
     }
 }

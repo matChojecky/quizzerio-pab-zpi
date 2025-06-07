@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Quizerio.Application.Quiz.DTO;
 using Quizerio.Domain.Quiz.Model;
 

@@ -1,3 +1,4 @@
+using System;
 using Quizerio.Domain.Quiz.Model;
 
 namespace Quizerio.Application.Quiz.Commands

@@ -8,6 +8,5 @@ namespace Quizerio.Application.Quiz.Commands
         }
 
         public string Name { get; set; }
-        
     }
 }

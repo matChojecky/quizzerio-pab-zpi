@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
 
@@ -20,7 +21,6 @@ namespace Quizerio.Api.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] AddQuestionCategoryCommand command)
         {
-
             _quizzFacade.AddQuestionCategory(command);
 
             return CreatedAtAction(null, null);
@@ -30,7 +30,7 @@ namespace Quizerio.Api.Controllers
         public IActionResult ListAll()
         {
             var categories = _quizzFacade.GetQuestionCategories();
-            
+
             return Ok(categories);
         }
     }

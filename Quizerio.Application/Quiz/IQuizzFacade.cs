@@ -1,5 +1,4 @@
 using Quizerio.Application.Quiz.Commands;
-using Quizerio.Application.Quiz.DTO;
 using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 
@@ -15,7 +14,7 @@ namespace Quizerio.Application.Quiz
         void AddQuestion(CreateQuestionCommand command);
         void DeleteQuestion(DeleteQuestionCommand command);
         void EditQuestion(UpdateQuestionCommand command);
-        
+
         void AddQuestionCategory(AddQuestionCategoryCommand command);
 
         List<QuestionCategory> GetQuestionCategories();

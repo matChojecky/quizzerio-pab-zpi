@@ -1,3 +1,5 @@
+using System;
+
 namespace Quizerio.Application.Quiz.Commands
 {
     public class DeleteQuestionCommand

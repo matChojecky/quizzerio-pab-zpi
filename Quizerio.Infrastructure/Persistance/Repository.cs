@@ -1,19 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Quizerio.Domain.Common;
-using Quizerio.Domain.Quiz.Model;
 
 namespace Quizerio.Infrastructure.Persistance
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private EfDbContext _db { get;  }
-        private DbSet<TEntity> enitities { get;  }
-
         public Repository(EfDbContext dbContext)
         {
             _db = dbContext;
             enitities = dbContext.Set<TEntity>();
         }
+
+        private EfDbContext _db { get; }
+        private DbSet<TEntity> enitities { get; }
 
         public void Add(TEntity entity)
         {
@@ -29,7 +28,7 @@ namespace Quizerio.Infrastructure.Persistance
         {
             var entity = enitities.Find(entityId);
 
-            if (entity == null) throw new KeyNotFoundException($"Entity not found");
+            if (entity == null) throw new KeyNotFoundException("Entity not found");
 
             return entity;
         }
@@ -47,11 +46,10 @@ namespace Quizerio.Infrastructure.Persistance
 
             enitities.Remove(entity);
         }
-        
+
         protected virtual IQueryable<TEntity> QueryWithIncludes()
         {
             return enitities;
         }
-        
     }
 }

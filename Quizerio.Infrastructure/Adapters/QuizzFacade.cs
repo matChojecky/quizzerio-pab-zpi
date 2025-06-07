@@ -1,7 +1,6 @@
 using Quizerio.Application;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
-using Quizerio.Application.Quiz.DTO;
 using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 using Quizerio.Domain.Quiz.Ports;
@@ -10,9 +9,9 @@ namespace Quizerio.Infrastructure.Adapters
 {
     public class QuizzFacade : IQuizzFacade
     {
+        private readonly IQuestionCategoryRepository _questionCategoryRepository;
         private readonly IQuestionService _questionService;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IQuestionCategoryRepository _questionCategoryRepository;
 
         public QuizzFacade(
             IUnitOfWork unitOfWork,
@@ -35,7 +34,7 @@ namespace Quizerio.Infrastructure.Adapters
         {
             _questionService.ChangeQuestionStatus(command);
             // TODO: send email to submitting user
-            
+
             _unitOfWork.Commit();
         }
 
@@ -49,11 +48,6 @@ namespace Quizerio.Infrastructure.Adapters
             return _questionService.GetQuestions(query);
         }
 
-        public List<Question> GetQuestions()
-        {
-            return _questionService.GetQuestions(new ListQuestionsQuery());
-        }
-
         public void AddQuestion(CreateQuestionCommand command)
         {
             _questionService.AddQuestion(command);
@@ -64,13 +58,12 @@ namespace Quizerio.Infrastructure.Adapters
         public void DeleteQuestion(DeleteQuestionCommand command)
         {
             _questionService.DeleteQuestion(command);
-            
         }
 
         public void EditQuestion(UpdateQuestionCommand command)
         {
             _questionService.UpdateQuestion(command);
-            
+
             _unitOfWork.Commit();
         }
 
@@ -80,7 +73,7 @@ namespace Quizerio.Infrastructure.Adapters
                 command.Name,
                 Guid.NewGuid()
             );
-            
+
             _questionCategoryRepository.Add(category);
             _unitOfWork.Commit();
         }
@@ -88,6 +81,11 @@ namespace Quizerio.Infrastructure.Adapters
         public List<QuestionCategory> GetQuestionCategories()
         {
             return _questionCategoryRepository.GetAll();
+        }
+
+        public List<Question> GetQuestions()
+        {
+            return _questionService.GetQuestions(new ListQuestionsQuery());
         }
     }
 }
