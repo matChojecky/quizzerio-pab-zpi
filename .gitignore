@@ -46,4 +46,4 @@ Quizerio.Api/Quizerio.db
 # Output from Blazor/web builds
 **/wwwroot/_framework/
 
-
+.vs/
