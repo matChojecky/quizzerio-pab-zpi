@@ -44,7 +44,7 @@ namespace Quizerio.Infrastructure.Adapters
                 command.Username,
                 command.Email,
                 command.Password,
-                command.Role,
+                current.Roles,
                 current.Created,
                 DateTime.Now);
             
