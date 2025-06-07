@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Quizerio" type="CompoundRunConfigurationType">
+    <toRun name="Quizerio.Api" type="LaunchSettings" />
+    <toRun name="Quizerio.CMS" type="LaunchSettings" />
+    <toRun name="Quizerio.Client" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>

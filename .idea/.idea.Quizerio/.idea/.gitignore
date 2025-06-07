@@ -12,7 +12,38 @@
 /dataSources/
 /dataSources.local.xml
 
-# Ignore build output directories
-bin/
-obj/
+# macOS system files
+.DS_Store
+
+# .NET build output
+**/bin/
+**/obj/
+
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# SQLite DB (if generated locally)
+Quizerio.Api/Quizerio.db
+
+# Rider / JetBrains IDE
+.idea/
+*.sln.iml
+
+# Build results cache
+**/*.cache
+**/*.pdb
+**/*.dll
+**/*.exe
+**/*.json.gz
+**/*.css
+**/*.css.gz
+**/*.bundle.scp.css
+
+# Output from Blazor/web builds
+**/wwwroot/_framework/
+
 
