@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Quizerio.Api;
+using Quizerio.Infrastructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,5 +27,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+    dataSeeder.Seed();
+}
 
 app.Run();

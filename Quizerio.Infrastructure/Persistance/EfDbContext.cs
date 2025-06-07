@@ -9,7 +9,6 @@ namespace Quizerio.Infrastructure.Persistance
     {
         public EfDbContext(DbContextOptions<EfDbContext> options) : base(options)
         {
-            Database.EnsureCreated();
         }
 
         public DbSet<Question> Questions { get; set; }

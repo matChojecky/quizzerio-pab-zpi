@@ -33,6 +33,8 @@ namespace Quizerio.Api
             services.AddDbContext<EfDbContext>(options =>
                 options.UseSqlite("Data Source = Quizerio.db")
             );
+            
+            services.AddScoped<DataSeeder>();
 
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();

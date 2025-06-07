@@ -2,6 +2,7 @@ namespace Quizerio.Application.User.Dtos
 {
     public class UserDto
     {
+        public UserDto() {}
         public UserDto(string username, string email, string password)
         {
             Username = username;
