@@ -1,0 +1,116 @@
+﻿@page "/categories"
+
+@inject HttpClient Http
+
+<PageTitle>Categories</PageTitle>
+
+<h1>Categories</h1>
+
+<button class="btn btn-primary" @onclick="GetQuestionCategoryAsync">Load current categories</button>
+
+@if (questionCategories != null)
+{
+    <p>Number of categories: @questionCategories.Count</p>
+    <ul>
+        @foreach (var c in questionCategories)
+        {
+            <li>@c.Name</li>
+        }
+    </ul>
+}
+else if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (errorMessage != null)
+{
+    <p class="text-danger">@errorMessage</p>
+}
+
+<hr />
+
+<h2>Add new category</h2>
+<div class="mb-3">
+    <label>Category label:</label>
+    <input class="form-control" @bind="newQuestionCategory.Name" />
+</div>
+
+
+<button class="btn btn-success" @onclick="AddQuestionCategoryAsync">Add category</button>
+@if (addQuestionMessage != null)
+{
+    <p>@addQuestionMessage</p>
+}
+
+@code {
+    private List<QuestionCategoryDto>? questions;
+    private bool isLoading = false;
+    private string? errorMessage;
+
+    private List<QuestionCategoryDto> questionCategories = new();
+    private QuestionCategoryDto newQuestionCategory = new();
+
+    private string? addQuestionMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetQuestionCategoryAsync();
+    }
+
+    private async Task GetQuestionCategoryAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+        questions = null;
+        try
+        {
+            questionCategories = await Http.GetFromJsonAsync<List<QuestionCategoryDto>>("https://localhost:7180/QuestionCategory");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error while loading questions: {ex.Message}";
+        }
+        isLoading = false;
+    }
+
+    private async Task AddQuestionCategoryAsync()
+    {
+        addQuestionMessage = null;
+
+        if (string.IsNullOrWhiteSpace(newQuestionCategory.Name))
+        {
+            addQuestionMessage = "Question category label should not be empty!";
+            return;
+        }
+
+        var writeModel = new QuestionCategoryDto
+        {
+            Name = newQuestionCategory.Name
+        };
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("https://localhost:7180/QuestionCategory", writeModel);
+            if (response.IsSuccessStatusCode)
+            {
+                addQuestionMessage = "Question Category added!";
+                newQuestionCategory = new QuestionCategoryDto();
+                await GetQuestionCategoryAsync();
+            }
+            else
+            {
+                addQuestionMessage = $"Error: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            addQuestionMessage = $"Error while trying to add category: {ex.Message}";
+        }
+    }
+
+
+    public class QuestionCategoryDto
+    {
+        public string Name { get; set; } = string.Empty;
+    }
+}

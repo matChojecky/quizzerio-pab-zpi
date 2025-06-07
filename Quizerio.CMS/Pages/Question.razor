@@ -1,0 +1,222 @@
+﻿@page "/questions"
+
+@inject HttpClient Http
+
+<PageTitle>Questions</PageTitle>
+
+<h1>Questions</h1>
+
+<button class="btn btn-primary" @onclick="GetQuestionsAsync">Load current questions</button>
+
+@if (questions != null)
+{
+    <p>Number of questions: @questions.Count</p>
+    <ul>
+        @foreach (var q in questions)
+        {
+            <li>@q.QuestionText</li>
+            @foreach (var a in q.Answers)
+            {
+                <li>@a.Text</li>
+            }
+        }
+    </ul>
+}
+else if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (errorMessage != null)
+{
+    <p class="text-danger">@errorMessage</p>
+}
+
+<hr />
+
+<h2>Add new question</h2>
+<div class="mb-3">
+    <label>Question:</label>
+    <input class="form-control" @bind="newQuestion.QuestionText" />
+</div>
+
+<div class="mb-3">
+    <label>Difficulty level:</label>
+    <select class="form-select" @bind="newQuestion.Difficulty">
+        <option value="0">Easy</option>
+        <option value="1">Medium</option>
+        <option value="2">Hard</option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label>Question category:</label>
+    <select class="form-select" @bind="newQuestion.CategoryId">
+        <option value="">-- Question category --</option>
+        @foreach (var cat in categories)
+        {
+            <option value="@cat.Id">@cat.Name</option>
+        }
+    </select>
+</div>
+
+<div class="mb-3">
+    <label>Answers:</label>
+    @for (int i = 0; i < newQuestion.Answers.Length; i++)
+    {
+        var index = i;
+        <div class="input-group mb-2">
+            <input type="radio" 
+                   class="btn-check" 
+                   name="correctAnswer" 
+                   id="answer-@index" 
+                   autocomplete="off"
+                   checked="@newQuestion.Answers[index].IsCorrect"
+                   @onchange="() => SetCorrectAnswer(index)" />
+            <label class="btn btn-outline-success input-group-text" for="answer-@index">
+                <i class="oi oi-check"></i>
+            </label>
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="Answer #@(index + 1)"
+                   @bind="newQuestion.Answers[index].Text" />
+        </div>
+    }
+</div>
+
+<button class="btn btn-success" @onclick="AddQuestionAsync">Add question</button>
+@if (addQuestionMessage != null)
+{
+    <p>@addQuestionMessage</p>
+}
+
+@code {
+    private List<QuestionDto>? questions;
+    private bool isLoading = false;
+    private string? errorMessage;
+
+    private List<CategoryDto> categories = new();
+    private QuestionDto newQuestion = new();
+
+    private string? addQuestionMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCategoriesAsync();
+    }
+
+    private async Task GetQuestionsAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+        questions = null;
+        try
+        {
+            questions = await Http.GetFromJsonAsync<List<QuestionDto>>("https://localhost:7180/Question");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error while loading questions: {ex.Message}";
+        }
+        isLoading = false;
+    }
+
+    private async Task GetCategoriesAsync()
+    {
+        try
+        {
+            categories = await Http.GetFromJsonAsync<List<CategoryDto>>("https://localhost:7180/QuestionCategory") ?? new();
+        }
+        catch
+        {
+            categories = new();
+        }
+    }
+
+    private void SetCorrectAnswer(int selectedIndex)
+    {
+        for (int i = 0; i < newQuestion.Answers.Length; i++)
+        {
+            newQuestion.Answers[i].IsCorrect = (i == selectedIndex);
+        }
+    }
+
+    private async Task AddQuestionAsync() 
+    {
+        addQuestionMessage = null;
+
+        if (string.IsNullOrWhiteSpace(newQuestion.QuestionText))
+        {
+            addQuestionMessage = "Question field should not be empty!";
+            return;
+        }
+
+        if (newQuestion.CategoryId == Guid.Empty)
+        {
+            addQuestionMessage = "You must select a category!";
+            return;
+        }
+
+        if (newQuestion.Answers.Length != 4 ||
+            newQuestion.Answers.Any(a => string.IsNullOrWhiteSpace(a.Text)) ||
+            newQuestion.Answers.Count(a => a.IsCorrect == true) != 1)
+        {
+            addQuestionMessage = "You must provide exactly 4 answers, each answer must not be empty, and exactly one answer must be marked as correct!";
+            return;
+        }
+
+        var writeModel = new QuestionDto
+        {
+            QuestionText = newQuestion.QuestionText,
+            Difficulty = newQuestion.Difficulty,
+            CategoryId = newQuestion.CategoryId,
+            Answers = newQuestion.Answers.Select(a => new AnswerDto
+            {
+                Text = a.Text,
+                IsCorrect = a.IsCorrect
+            }).ToArray()
+        };
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("https://localhost:7180/Question", writeModel);
+            if (response.IsSuccessStatusCode)
+            {
+                addQuestionMessage = "Question added successfully!";
+                newQuestion = new QuestionDto();
+                await GetQuestionsAsync();
+            }
+            else
+            {
+                addQuestionMessage = $"Error: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            addQuestionMessage = $"Error while adding question: {ex.Message}";
+        }
+    }
+
+    public class QuestionDto
+    {
+        public Guid Id { get; set; }
+        public string QuestionText { get; set; } = string.Empty;
+        public string Difficulty { get; set; } = string.Empty;
+        public Guid CategoryId { get; set; }
+        public AnswerDto[] Answers { get; set; } = new AnswerDto[4]
+        {
+            new(), new(), new(), new()
+        };
+    }
+
+    public class CategoryDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+
+    public class AnswerDto
+    {
+        public string Text { get; set; } = string.Empty;
+        public bool IsCorrect { get; set; } = false;
+    }
+}
