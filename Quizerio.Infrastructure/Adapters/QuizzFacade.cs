@@ -84,5 +84,10 @@ namespace Quizerio.Infrastructure.Adapters
             _questionCategoryRepository.Add(category);
             _unitOfWork.Commit();
         }
+
+        public List<QuestionCategory> GetQuestionCategories()
+        {
+            return _questionCategoryRepository.GetAll();
+        }
     }
 }

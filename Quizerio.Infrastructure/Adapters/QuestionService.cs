@@ -32,7 +32,7 @@ namespace Quizerio.Infrastructure.Adapters
 
         public void AddQuestion(CreateQuestionCommand command)
         {
-            List<Answer> answers = command.Answers.Select(a => new Answer(a.Text, a.IsCorrect)).ToList();
+            List<Answer> answers = command.Answers.Select(a => new Answer(a.Id ?? Guid.NewGuid(), a.Text, a.IsCorrect)).ToList();
             QuestionCategory category = _questionCategoryRepository.GetById(command.CategoryId);
 
             var question = new Question(

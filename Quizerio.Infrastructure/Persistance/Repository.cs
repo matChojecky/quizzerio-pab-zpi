@@ -36,7 +36,7 @@ namespace Quizerio.Infrastructure.Persistance
 
         public List<TEntity> GetAll()
         {
-            return enitities.ToList();
+            return QueryWithIncludes().ToList();
         }
 
         public void Delete(Guid entityId)
@@ -46,6 +46,11 @@ namespace Quizerio.Infrastructure.Persistance
             if (entity == null) return;
 
             enitities.Remove(entity);
+        }
+        
+        protected virtual IQueryable<TEntity> QueryWithIncludes()
+        {
+            return enitities;
         }
         
     }

@@ -10,7 +10,5 @@ namespace Quizerio.Domain.Quiz.Model
 
         public Guid Id { get; private set; }
         public string Name { get; private set; }
-
-        public List<Question> Questions { get; set; }
     }
 }

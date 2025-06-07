@@ -31,9 +31,8 @@ namespace Quizerio.Infrastructure.Persistance.EntityConfigurations
                     {
                         a.ToTable("Answers"); // Separate table
                         a.WithOwner().HasForeignKey("QuestionId");
-                        a.Property<int>("Id");
 
-                        a.HasKey("QuestionId", "Id");
+                        a.HasKey(a => a.Id);
 
                         a.Property(p => p.Text).IsRequired();
                         a.Property(p => p.IsCorrect).IsRequired();
@@ -43,12 +42,8 @@ namespace Quizerio.Infrastructure.Persistance.EntityConfigurations
             configuration
                 .HasOne<QuestionCategory>(q => q.Category)
                 .WithMany()
-                .HasForeignKey("CategoryId");
-
-            configuration
-                .Navigation(q => q.Answers).Metadata.SetField("_answers");
-            configuration
-                .Navigation(q => q.Answers).UsePropertyAccessMode(PropertyAccessMode.Field);
+                .HasForeignKey("CategoryId")
+                .IsRequired();
         }
     }
 }

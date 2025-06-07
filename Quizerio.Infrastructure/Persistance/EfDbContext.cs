@@ -1,12 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using Quizerio.Domain.Quiz.Model;
 using Quizerio.Infrastructure.Persistance.EntityConfigurations;
 
 namespace Quizerio.Infrastructure.Persistance
 {
-    public class EfDbContext : DbContext
+    public sealed class EfDbContext : DbContext
     {
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuestionCategory> QuestionCategories { get; set; }
+        
         public EfDbContext(DbContextOptions<EfDbContext> options) : base(options)
         {
+            Database.EnsureCreated();
         }
 
 
@@ -15,7 +20,7 @@ namespace Quizerio.Infrastructure.Persistance
             base.OnModelCreating(modelBuilder);
 
             modelBuilder
-                .ApplyConfiguration(new UserConfiguration())
+                // .ApplyConfiguration(new UserConfiguration())
                 .ApplyConfiguration(new QuestionConfiguration())
                 .ApplyConfiguration(new QuestionCategoryConfiguration());
         }
