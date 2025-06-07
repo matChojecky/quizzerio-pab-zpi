@@ -4,12 +4,12 @@ using Quizerio.Domain.Quiz.Ports;
 
 namespace Quizerio.Infrastructure.Persistance
 {
-    public class QuestionRepository : IQuestionRepository
+    public class QuestionRepository : Repository<Question>, IQuestionRepository
     {
         private readonly EfDbContext _context;
         private readonly DbSet<Question> _questions;
 
-        public QuestionRepository(EfDbContext context)
+        public QuestionRepository(EfDbContext context) : base(context)
         {
             _context = context;
             _questions = context.Set<Question>();
@@ -22,39 +22,6 @@ namespace Quizerio.Infrastructure.Persistance
                 .ExecuteUpdate(q =>
                     q.SetProperty(it => it.Status, status)
                 );
-        }
-
-        public void AddQuestion(Question question)
-        {
-            _questions.Add(question);
-        }
-
-        public void UpdateQuestion(Question question)
-        {
-            _questions.Update(question);
-        }
-
-        public Question GetQuestion(Guid questionId)
-        {
-            var question = _questions.FirstOrDefault(q => q.Id == questionId);
-
-            if (question == null) throw new KeyNotFoundException($"Question with id {questionId} not found");
-
-            return question;
-        }
-
-        public List<Question> GetQuestions()
-        {
-            return _questions.ToList();
-        }
-
-        public void DeleteQuestion(Guid questionId)
-        {
-            var question = _questions.FirstOrDefault(q => q.Id == questionId);
-
-            if (question == null) return;
-
-            _questions.Remove(question);
         }
     }
 }

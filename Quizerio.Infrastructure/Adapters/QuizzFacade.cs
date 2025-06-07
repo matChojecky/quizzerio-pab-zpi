@@ -23,26 +23,28 @@ namespace Quizerio.Infrastructure.Adapters
         }
 
 
-        public void ApproveQuestion(Guid questionId)
+        public void ApproveQuestion(ApproveQuestionCommand command)
         {
-            var command = new ChangeQuestionStatusCommand(questionId, QuestionStatus.Approved);
-
             _questionService.ChangeQuestionStatus(command);
             _unitOfWork.Commit();
         }
 
-        public void RejectQuestion(Guid questionId, string reason)
+        public void RejectQuestion(RejectQuestionCommand command)
         {
-            var command = new ChangeQuestionStatusCommand(questionId, QuestionStatus.Rejected);
-            _questionService.ChangeQuestionStatus(command); // TODO: send email to submitting user
+            _questionService.ChangeQuestionStatus(command);
+            // TODO: send email to submitting user
             
             _unitOfWork.Commit();
         }
 
-        public Question GetQuestion(Guid questionId)
+        public Question GetQuestion(GetQuestionQuery query)
         {
-            var query = new GetQuestionQuery();
             return _questionService.GetQuestion(query);
+        }
+
+        public List<Question> GetQuestions(ListQuestionsQuery query)
+        {
+            return _questionService.GetQuestions(query);
         }
 
         public List<Question> GetQuestions()
@@ -50,22 +52,24 @@ namespace Quizerio.Infrastructure.Adapters
             return _questionService.GetQuestions(new ListQuestionsQuery());
         }
 
-        public void AddQuestion(QuestionWriteModel question)
+        public void AddQuestion(CreateQuestionCommand command)
         {
-            _questionService.AddQuestion(question);
+            _questionService.AddQuestion(command);
             _unitOfWork.Commit();
         }
 
 
-        public void DeleteQuestion(Guid questionId)
+        public void DeleteQuestion(DeleteQuestionCommand command)
         {
-            _questionService.DeleteQuestion(new DeleteQuestionCommand(questionId));
+            _questionService.DeleteQuestion(command);
             
         }
 
-        public void EditQuestion(Guid questionId, QuestionWriteModel question)
+        public void EditQuestion(UpdateQuestionCommand command)
         {
-            throw new NotImplementedException();
+            _questionService.UpdateQuestion(command);
+            
+            _unitOfWork.Commit();
         }
     }
 }

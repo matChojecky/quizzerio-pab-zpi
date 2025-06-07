@@ -1,18 +1,19 @@
+using Application.Quiz.Commands;
 using Application.Quiz.DTO;
+using Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 
 namespace Application.Quiz
 {
     public interface IQuizzFacade
     {
-        void ApproveQuestion(ApproveQuestionDto approveQuestionDto);
-        void RejectQuestion(RejectQuestionDto rejectQuestionDto);
+        void ApproveQuestion(ApproveQuestionCommand command);
+        void RejectQuestion(RejectQuestionCommand command);
 
-        Question GetQuestion(Guid questionId);
-        List<Question> GetQuestions();
-        void AddQuestion(QuestionWriteModel question);
-        void AddQuestions(List<QuestionWriteModel> questions);
-        void DeleteQuestion(Guid questionId);
-        void EditQuestion(Guid questionId, QuestionWriteModel question);
+        Question GetQuestion(GetQuestionQuery query);
+        List<Question> GetQuestions(ListQuestionsQuery query);
+        void AddQuestion(CreateQuestionCommand command);
+        void DeleteQuestion(DeleteQuestionCommand command);
+        void EditQuestion(UpdateQuestionCommand command);
     }
 }

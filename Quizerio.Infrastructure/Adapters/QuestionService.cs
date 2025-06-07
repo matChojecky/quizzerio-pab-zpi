@@ -10,12 +10,17 @@ namespace Quizerio.Infrastructure.Adapters
     public class QuestionService : IQuestionService
     {
         private readonly IQuestionRepository _questionRepository;
+        private readonly IQuestionCategoryRepository _questionCategoryRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public QuestionService(IQuestionRepository questionRepository, IUnitOfWork unitOfWork)
+        public QuestionService(
+            IUnitOfWork unitOfWork,
+            IQuestionRepository questionRepository,
+            IQuestionCategoryRepository questionCategoryRepository)
         {
-            _questionRepository = questionRepository;
             _unitOfWork = unitOfWork;
+            _questionRepository = questionRepository;
+            _questionCategoryRepository = questionCategoryRepository;
         }
 
 
@@ -28,6 +33,7 @@ namespace Quizerio.Infrastructure.Adapters
         public void AddQuestion(CreateQuestionCommand command)
         {
             List<Answer> answers = command.Answers.Select(a => new Answer(a.Text, a.IsCorrect)).ToList();
+            QuestionCategory category = _questionCategoryRepository.GetById(command.CategoryId);
 
             var question = new Question(
                 Guid.NewGuid(),
@@ -35,16 +41,16 @@ namespace Quizerio.Infrastructure.Adapters
                 command.Difficulty,
                 QuestionStatus.Pending,
                 answers,
-                new QuestionCategory()
+                category
             );
 
-            _questionRepository.AddQuestion(question);
+            _questionRepository.Add(question);
             _unitOfWork.Commit();
         }
 
         public void DeleteQuestion(DeleteQuestionCommand command)
         {
-            _questionRepository.DeleteQuestion(command.Id);
+            _questionRepository.Delete(command.Id);
             _unitOfWork.Commit();
         }
 
@@ -55,12 +61,12 @@ namespace Quizerio.Infrastructure.Adapters
 
         public Question GetQuestion(GetQuestionQuery query)
         {
-            return _questionRepository.GetQuestion(query.Id);
+            return _questionRepository.GetById(query.Id);
         }
 
         public List<Question> GetQuestions(ListQuestionsQuery query)
         {
-            return _questionRepository.GetQuestions();
+            return _questionRepository.GetAll();
         }
     }
 }

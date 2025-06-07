@@ -2,9 +2,9 @@ using Quizerio.Domain.Quiz.Model;
 
 namespace Application.Quiz.Commands
 {
-    public class ChangeQuestionStatusCommand
+    public abstract class ChangeQuestionStatusCommand
     {
-        public ChangeQuestionStatusCommand(Guid id, QuestionStatus status)
+        protected ChangeQuestionStatusCommand(Guid id, QuestionStatus status)
         {
             Id = id;
             Status = status;
@@ -12,5 +12,22 @@ namespace Application.Quiz.Commands
 
         public Guid Id { get; set; }
         public QuestionStatus Status { get; set; }
+    }
+
+    public class ApproveQuestionCommand : ChangeQuestionStatusCommand
+    {
+        public ApproveQuestionCommand(Guid id) : base(id, QuestionStatus.Approved)
+        {
+        }
+    }
+
+    public class RejectQuestionCommand : ChangeQuestionStatusCommand
+    {
+        public RejectQuestionCommand(Guid id, string reason) : base(id, QuestionStatus.Rejected)
+        {
+            Reason = reason;
+        }
+
+        public string Reason { get; private set; }
     }
 }
