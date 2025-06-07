@@ -1,16 +1,19 @@
-using Quizerio.Domain.Quizz;
+using Quizerio.Domain.Quiz.Model;
 
-namespace Quizerio.Domain.Question.Ports
+namespace Quizerio.Domain.Quiz.Ports
 {
     public interface IQuestionRepository
     {
         void UpdateQuestionStatus(Guid id, QuestionStatus status);
-        
-        void AddQuestion(Quizz.Question question);
-        
-        Quizz.Question GetQuestion(Guid questionId);
-        
+
+        void AddQuestion(Question question);
+
+        void UpdateQuestion(Question question);
+
+        Question GetQuestion(Guid questionId);
+
+        List<Question> GetQuestions();
+
         void DeleteQuestion(Guid questionId);
-        
     }
 }

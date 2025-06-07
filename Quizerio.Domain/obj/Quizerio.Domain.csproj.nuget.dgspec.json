@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerio.Domain/Quizerio.Domain.csproj": {}
+    "/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/Quizerio.Domain.csproj": {}
   },
   "projects": {
-    "/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerio.Domain/Quizerio.Domain.csproj": {
+    "/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/Quizerio.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerio.Domain/Quizerio.Domain.csproj",
+        "projectUniqueName": "/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/Quizerio.Domain.csproj",
         "projectName": "Quizerio.Domain",
-        "projectPath": "/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerio.Domain/Quizerio.Domain.csproj",
+        "projectPath": "/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/Quizerio.Domain.csproj",
         "packagesPath": "/Users/mat/.nuget/packages/",
-        "outputPath": "/Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerio.Domain/obj/",
+        "outputPath": "/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/mat/.nuget/NuGet/NuGet.Config"
