@@ -47,4 +47,4 @@ Quizerio.Api/Quizerio.db
 **/wwwroot/_framework/
 
 .vs/
-*.db
+**/*.db

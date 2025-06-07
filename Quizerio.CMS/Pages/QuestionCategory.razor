@@ -10,21 +10,45 @@
 
 @if (questionCategories != null)
 {
-    <p>Number of categories: @questionCategories.Count</p>
-    <ul>
-        @foreach (var c in questionCategories)
-        {
-            <li>@c.Name</li>
-        }
-    </ul>
+    <div class="table-responsive mt-4">
+        <table class="table table-striped table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category name</th>
+                    <th>Number of questions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                @foreach (var category in questionCategories)
+                {
+                    <tr>
+                        <td class="fw-bold">@(questionCategories.IndexOf(category) + 1)</td>
+                        <td>@category.Name</td>
+                        <td>
+                            @(questionsPerCategory.TryGetValue(category.Id, out var count) ? count : 0)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else if (isLoading)
 {
-    <p>Loading...</p>
+    <div class="d-flex justify-content-center mt-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 }
 else if (errorMessage != null)
 {
-    <p class="text-danger">@errorMessage</p>
+    <div class="alert alert-danger mt-4" role="alert">
+        <i class="oi oi-warning me-2"></i>
+        @errorMessage
+    </div>
 }
 
 <hr />
@@ -43,12 +67,12 @@ else if (errorMessage != null)
 }
 
 @code {
-    private List<QuestionCategoryDto>? questions;
     private bool isLoading = false;
     private string? errorMessage;
 
     private List<QuestionCategoryDto> questionCategories = new();
     private QuestionCategoryDto newQuestionCategory = new();
+    private Dictionary<Guid, int> questionsPerCategory = new Dictionary<Guid, int>();
 
     private string? addQuestionMessage;
 
@@ -61,14 +85,20 @@ else if (errorMessage != null)
     {
         isLoading = true;
         errorMessage = null;
-        questions = null;
         try
         {
-            questionCategories = await Http.GetFromJsonAsync<List<QuestionCategoryDto>>("https://localhost:7180/QuestionCategory");
+            questionsPerCategory.Clear();
+            questionCategories = await Http.GetFromJsonAsync<List<QuestionCategoryDto>>("https://localhost:7180/QuestionCategory") ?? new();
+            var questions = await Http.GetFromJsonAsync<List<QuestionDto>>("https://localhost:7180/Question") ?? new();
+
+            foreach (var category in questionCategories)
+            {
+                questionsPerCategory.Add(category.Id, questions.Count(q => q.CategoryId == category.Id));
+            }
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error while loading questions: {ex.Message}";
+            errorMessage = $"Error while loading categories: {ex.Message}";
         }
         isLoading = false;
     }
@@ -106,11 +136,5 @@ else if (errorMessage != null)
         {
             addQuestionMessage = $"Error while trying to add category: {ex.Message}";
         }
-    }
-
-
-    public class QuestionCategoryDto
-    {
-        public string Name { get; set; } = string.Empty;
     }
 }
