@@ -1,5 +1,4 @@
-using Application.User;
-using Quizerio.Domain.User.Model;
+using Quizerio.Application.User;
 using Quizerio.Domain.User.Ports;
 
 namespace Quizerio.Infrastructure.Adapters

@@ -1,9 +1,9 @@
-using Application.Quiz.DTO;
+using Quizerio.Application.Quiz.DTO;
 using Quizerio.Domain.Quiz.Model;
 
-namespace Application.Quiz.Commands
+namespace Quizerio.Application.Quiz.Commands
 {
-    public record UpdateQuestionCommand : QuestionWriteModel
+    public class UpdateQuestionCommand : QuestionWriteModel
     {
         public UpdateQuestionCommand(
             Guid id,

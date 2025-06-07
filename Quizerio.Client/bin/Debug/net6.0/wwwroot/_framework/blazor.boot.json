@@ -2,7 +2,7 @@
   "cacheBootResources": true,
   "config": [ ],
   "debugBuild": true,
-  "entryAssembly": "Quizzerio.Client",
+  "entryAssembly": "Quizerio.Client",
   "icuDataMode": 0,
   "linkerEnabled": false,
   "resources": {
@@ -196,13 +196,13 @@
       "mscorlib.dll": "sha256-dej2C1vKJX4t4w52mheBJKz7IMc5TYzNJtGdibx+5DM=",
       "netstandard.dll": "sha256-flJhPzicIfX7Oa5a0lT6gdwetEPjki5yYm7sP7FCZyw=",
       "System.Private.CoreLib.dll": "sha256-Oc1GxmQYvTfZPNk6dUltGE0zVVpinEIkypqiRwLPyHw=",
-      "Quizzerio.Client.dll": "sha256-8Uv+NqLVDKh2yEPiRXIf2lUFl2Pc6fg5HKgW8elNN0c="
+      "Quizerio.Client.dll": "sha256-6gB56\/\/Luf0FHX3uimbpYa25vuHt3gjUISY8+4wf5y0="
     },
     "extensions": null,
     "lazyAssembly": null,
     "libraryInitializers": null,
     "pdb": {
-      "Quizzerio.Client.pdb": "sha256-kQJcEUSR+SrOG8Ag2YUPOPc0l6nCkW+5oLop5jHaWYo="
+      "Quizerio.Client.pdb": "sha256-Iv2CheQ2wLMsgCGBaJxzN7cBqmMvIduKWL6nDcKhYvc="
     },
     "runtime": {
       "dotnet.6.0.35.oxkmjho8d0.js": "sha256-T8noLH7sR5\/2L2IUChsmdTPrzvzsRNOKoNnXkdWwXTs=",

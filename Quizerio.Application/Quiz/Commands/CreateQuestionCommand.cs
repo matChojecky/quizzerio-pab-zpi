@@ -1,9 +1,9 @@
-using Application.Quiz.DTO;
+using Quizerio.Application.Quiz.DTO;
 using Quizerio.Domain.Quiz.Model;
 
-namespace Application.Quiz.Commands
+namespace Quizerio.Application.Quiz.Commands
 {
-    public record CreateQuestionCommand : QuestionWriteModel
+    public class CreateQuestionCommand : QuestionWriteModel
     {
         public CreateQuestionCommand(
             string questionText,

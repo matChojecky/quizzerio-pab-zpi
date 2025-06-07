@@ -1,8 +1,8 @@
-using Application.Quiz.Commands;
-using Application.Quiz.Queries;
+using Quizerio.Application.Quiz.Commands;
+using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 
-namespace Application.Quiz
+namespace Quizerio.Application.Quiz
 {
     public interface IQuestionService
     {

@@ -1,4 +1,4 @@
-namespace Application.User
+namespace Quizerio.Application.User
 {
     public interface IUserFacade
     {

@@ -1,6 +1,6 @@
 using Quizerio.Domain.Quiz.Ports;
 
-namespace Application
+namespace Quizerio.Application
 {
     public interface IUnitOfWork : IDisposable
     {

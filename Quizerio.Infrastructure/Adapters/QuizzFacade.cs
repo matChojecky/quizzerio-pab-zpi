@@ -1,8 +1,8 @@
-using Application;
-using Application.Quiz;
-using Application.Quiz.Commands;
-using Application.Quiz.DTO;
-using Application.Quiz.Queries;
+using Quizerio.Application;
+using Quizerio.Application.Quiz;
+using Quizerio.Application.Quiz.Commands;
+using Quizerio.Application.Quiz.DTO;
+using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 using Quizerio.Domain.Quiz.Ports;
 
@@ -12,13 +12,15 @@ namespace Quizerio.Infrastructure.Adapters
     {
         private readonly IQuestionService _questionService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IQuestionCategoryRepository _questionCategoryRepository;
 
         public QuizzFacade(
+            IUnitOfWork unitOfWork,
             IQuestionService questionService,
-            IUnitOfWork unitOfWork
-        )
+            IQuestionCategoryRepository questionCategoryRepository)
         {
             _questionService = questionService;
+            _questionCategoryRepository = questionCategoryRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -69,6 +71,17 @@ namespace Quizerio.Infrastructure.Adapters
         {
             _questionService.UpdateQuestion(command);
             
+            _unitOfWork.Commit();
+        }
+
+        public void AddQuestionCategory(AddQuestionCategoryCommand command)
+        {
+            var category = new QuestionCategory(
+                command.Name,
+                Guid.NewGuid()
+            );
+            
+            _questionCategoryRepository.Add(category);
             _unitOfWork.Commit();
         }
     }

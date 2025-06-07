@@ -603,6 +603,45 @@
         "build": {
           "buildTransitive/net6.0/System.Text.Json.targets": {}
         }
+      },
+      "Quizerio.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Quizerio.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Quizerio.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Quizerio.Application.dll": {}
+        }
+      },
+      "Quizerio.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Quizerio.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Quizerio.Domain.dll": {}
+        }
+      },
+      "Quizerio.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.20",
+          "Microsoft.EntityFrameworkCore.Sqlite": "7.0.20",
+          "Quizerio.Application": "1.0.0",
+          "Quizerio.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Quizerio.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Quizerio.Infrastructure.dll": {}
+        }
       }
     }
   },
@@ -1604,12 +1643,28 @@
         "system.text.json.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Quizerio.Application/1.0.0": {
+      "type": "project",
+      "path": "../Quizerio.Application/Quizerio.Application.csproj",
+      "msbuildProject": "../Quizerio.Application/Quizerio.Application.csproj"
+    },
+    "Quizerio.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Quizerio.Domain/Quizerio.Domain.csproj",
+      "msbuildProject": "../Quizerio.Domain/Quizerio.Domain.csproj"
+    },
+    "Quizerio.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../Quizerio.Infrastructure/Quizerio.Infrastructure.csproj",
+      "msbuildProject": "../Quizerio.Infrastructure/Quizerio.Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
       "Microsoft.EntityFrameworkCore >= 7.0.20",
       "Microsoft.EntityFrameworkCore.Sqlite >= 7.0.20",
+      "Quizerio.Infrastructure >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.5.0"
     ]
   },
@@ -1637,7 +1692,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/Quizerio.Infrastructure.csproj": {
+              "projectPath": "/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Infrastructure/Quizerio.Infrastructure.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

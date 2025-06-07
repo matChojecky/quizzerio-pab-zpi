@@ -1,9 +1,9 @@
-using Application.Quiz.Commands;
-using Application.Quiz.DTO;
-using Application.Quiz.Queries;
+using Quizerio.Application.Quiz.Commands;
+using Quizerio.Application.Quiz.DTO;
+using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 
-namespace Application.Quiz
+namespace Quizerio.Application.Quiz
 {
     public interface IQuizzFacade
     {
@@ -15,5 +15,7 @@ namespace Application.Quiz
         void AddQuestion(CreateQuestionCommand command);
         void DeleteQuestion(DeleteQuestionCommand command);
         void EditQuestion(UpdateQuestionCommand command);
+        
+        void AddQuestionCategory(AddQuestionCategoryCommand command);
     }
 }

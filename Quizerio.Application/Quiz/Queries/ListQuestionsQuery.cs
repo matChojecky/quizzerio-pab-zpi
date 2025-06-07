@@ -1,4 +1,4 @@
-namespace Application.Quiz.Queries
+namespace Quizerio.Application.Quiz.Queries
 {
     public class ListQuestionsQuery
     {

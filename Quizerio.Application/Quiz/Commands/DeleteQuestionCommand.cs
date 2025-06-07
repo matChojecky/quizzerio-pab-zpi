@@ -1,4 +1,4 @@
-namespace Application.Quiz.Commands
+namespace Quizerio.Application.Quiz.Commands
 {
     public class DeleteQuestionCommand
     {

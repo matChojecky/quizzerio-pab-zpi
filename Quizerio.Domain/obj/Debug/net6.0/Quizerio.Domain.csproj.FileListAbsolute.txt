@@ -10,3 +10,15 @@
 /Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerio.Domain/obj/Debug/net6.0/refint/Quizerio.Domain.dll
 /Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerio.Domain/obj/Debug/net6.0/Quizerio.Domain.pdb
 /Users/mat/Project/studia/pab/Quizzerio/Quizzerio/Quizerio.Domain/obj/Debug/net6.0/ref/Quizerio.Domain.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/bin/Debug/net6.0/Quizerio.Domain.deps.json
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/bin/Debug/net6.0/Quizerio.Domain.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/bin/Debug/net6.0/Quizerio.Domain.pdb
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/Quizerio.Domain.csproj.AssemblyReference.cache
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/Quizerio.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/Quizerio.Domain.AssemblyInfoInputs.cache
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/Quizerio.Domain.AssemblyInfo.cs
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/Quizerio.Domain.csproj.CoreCompileInputs.cache
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/Quizerio.Domain.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/refint/Quizerio.Domain.dll
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/Quizerio.Domain.pdb
+/Users/mat/Project/studia/pab/Quizerio/Quizerio/Quizerio.Domain/obj/Debug/net6.0/ref/Quizerio.Domain.dll

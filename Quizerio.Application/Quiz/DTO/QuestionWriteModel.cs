@@ -1,17 +1,18 @@
 using Quizerio.Domain.Quiz.Model;
 
-namespace Application.Quiz.DTO
+namespace Quizerio.Application.Quiz.DTO
 {
-    public record QuestionWriteModel
+    public class QuestionWriteModel
     {
-        public List<AnswerWriteModel> Answers;
+        public readonly List<AnswerWriteModel> Answers;
 
         public Guid CategoryId;
 
-        public QuestionDifficulty Difficulty;
-        public string QuestionText;
+        public readonly QuestionDifficulty Difficulty;
+        
+        public readonly string QuestionText;
 
-        public QuestionWriteModel(string questionText, QuestionDifficulty difficulty, List<AnswerWriteModel> answers,
+        protected QuestionWriteModel(string questionText, QuestionDifficulty difficulty, List<AnswerWriteModel> answers,
             Guid categoryId)
         {
             QuestionText = questionText;
@@ -21,12 +22,12 @@ namespace Application.Quiz.DTO
         }
     }
 
-    public record AnswerWriteModel
+    public abstract class AnswerWriteModel
     {
-        public bool IsCorrect;
-        public string Text;
+        public readonly bool IsCorrect;
+        public readonly string Text;
 
-        public AnswerWriteModel(string text, bool isCorrect)
+        protected AnswerWriteModel(string text, bool isCorrect)
         {
             Text = text;
             IsCorrect = isCorrect;

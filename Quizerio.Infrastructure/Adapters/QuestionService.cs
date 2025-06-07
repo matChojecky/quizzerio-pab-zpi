@@ -1,7 +1,7 @@
-using Application;
-using Application.Quiz;
-using Application.Quiz.Commands;
-using Application.Quiz.Queries;
+using Quizerio.Application;
+using Quizerio.Application.Quiz;
+using Quizerio.Application.Quiz.Commands;
+using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 using Quizerio.Domain.Quiz.Ports;
 
