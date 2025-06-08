@@ -11,15 +11,20 @@ namespace Quizerio.Infrastructure.Adapters
     {
         private readonly IQuestionCategoryRepository _questionCategoryRepository;
         private readonly IQuestionService _questionService;
+        private readonly IQuizGameService _quizGameService;
+        private readonly IQuizRepository _quizRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public QuizzFacade(
             IUnitOfWork unitOfWork,
             IQuestionService questionService,
-            IQuestionCategoryRepository questionCategoryRepository)
+            IQuestionCategoryRepository questionCategoryRepository, IQuizGameService quizGameService,
+            IQuizRepository quizRepository)
         {
             _questionService = questionService;
             _questionCategoryRepository = questionCategoryRepository;
+            _quizGameService = quizGameService;
+            _quizRepository = quizRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -81,6 +86,74 @@ namespace Quizerio.Infrastructure.Adapters
         public List<QuestionCategory> GetQuestionCategories()
         {
             return _questionCategoryRepository.GetAll();
+        }
+
+        public void CreateQuiz(CreateQuizCommand command)
+        {
+            var questions = new List<Question>();
+            command.Questions?.ForEach(questionId =>
+                questions.Add(
+                    _questionService.GetQuestion(new GetQuestionQuery(questionId))
+                )
+            );
+
+            var quiz = new Quiz(
+                Guid.NewGuid(),
+                command.OwnerId,
+                questions,
+                command.Name
+            );
+
+            _quizRepository.Add(quiz);
+
+            _unitOfWork.Commit();
+        }
+
+        public void AddQuestionToQuiz(AddQuestionToQuizCommand command)
+        {
+            var quiz = _quizRepository.GetById(command.QuizId);
+
+            quiz.AddQuestion(_questionService.GetQuestion(new GetQuestionQuery(command.QuestionId)));
+
+            _quizRepository.Update(quiz);
+            _unitOfWork.Commit();
+        }
+
+        public Guid CreateQuizGame(CreateQuizGameCommand command)
+        {
+            return _quizGameService.CreateQuizGame(command);
+        }
+
+        public void AddPointsToParticipant(AddPointsToParticipantCommand command)
+        {
+            // var quizGame = _quizGameService.GetQuizGame(command.GameId);
+            // var participant = quizGame.Participants.FirstOrDefault(x => x.Id == command.ParticipantId);
+            //
+            // if (participant == null)
+            // {
+            //     throw new ArgumentException("Invalid participant id");
+            // }
+            _quizGameService.AddPointsToParticipant(command);
+        }
+
+        public void GoToNextQuestion(GoToNextQuestionCommand command)
+        {
+            _quizGameService.GoToNextQuestion(command);
+        }
+
+        public void ChangeQuizGameState(ChangeQuizGameStateCommand command)
+        {
+            _quizGameService.ChangeQuizGameState(command);
+        }
+
+        public void JoinQuizGame(JoinQuizGameCommand command)
+        {
+            _quizGameService.JoinQuizGame(command);
+        }
+
+        public void StartQuizGame(ChangeQuizGameStateCommand command)
+        {
+            _quizGameService.ChangeQuizGameState(command);
         }
 
         public List<Question> GetQuestions()

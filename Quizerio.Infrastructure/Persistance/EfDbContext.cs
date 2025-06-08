@@ -13,6 +13,8 @@ namespace Quizerio.Infrastructure.Persistance
 
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionCategory> QuestionCategories { get; set; }
+        public DbSet<Quiz> Quizes { get; set; }
+        public DbSet<QuizGame> QuizGames { get; set; }
         public DbSet<User> Users { get; set; }
 
 
@@ -23,7 +25,9 @@ namespace Quizerio.Infrastructure.Persistance
             modelBuilder
                 .ApplyConfiguration(new UserConfiguration())
                 .ApplyConfiguration(new QuestionConfiguration())
-                .ApplyConfiguration(new QuestionCategoryConfiguration());
+                .ApplyConfiguration(new QuestionCategoryConfiguration())
+                .ApplyConfiguration(new QuizConfiguration())
+                .ApplyConfiguration(new QuizGameConfiguration());
         }
     }
 }

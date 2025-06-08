@@ -18,5 +18,21 @@ namespace Quizerio.Application.Quiz
         void AddQuestionCategory(AddQuestionCategoryCommand command);
 
         List<QuestionCategory> GetQuestionCategories();
+        
+        void CreateQuiz(CreateQuizCommand command);
+        
+        void AddQuestionToQuiz(AddQuestionToQuizCommand command);
+        
+        Guid CreateQuizGame(CreateQuizGameCommand command);
+        
+        void AddPointsToParticipant(AddPointsToParticipantCommand command);
+        
+        void GoToNextQuestion(GoToNextQuestionCommand command);
+
+        void ChangeQuizGameState(ChangeQuizGameStateCommand command);
+        
+        void JoinQuizGame(JoinQuizGameCommand command);
+        
+        
     }
 }

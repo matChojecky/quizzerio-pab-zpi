@@ -22,6 +22,7 @@ namespace Quizerio.Api
         private static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IQuizGameService, QuizGameService>();
             services.AddScoped<IQuizzFacade, QuizzFacade>();
             services.AddScoped<IUserFacade, UserFacade>();
 
@@ -40,7 +41,9 @@ namespace Quizerio.Api
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IQuestionCategoryRepository, QuestionCategoryRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            // services.AddScoped<DataSeeder>();
+            services.AddScoped<IQuizRepository, QuizRepository>();
+            services.AddScoped<IQuizGameRepository, QuizGameRepository>();
+            
 
             return services;
         }
