@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
+using Quizerio.Application.Quiz.Queries;
 
 namespace Quizerio.Api.Controllers
 {
@@ -42,6 +43,15 @@ namespace Quizerio.Api.Controllers
             //TODO: Implement removing questions
             
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult GetUserQuizzes([FromHeader(Name = "X-User-Id")] Guid userId)
+        {
+            var query = new ListOwnedQuizQuery(userId);
+            
+            var quizes = _quizzFacade.GetUserQuizzes(query);
+            return Ok(quizes);
         }
         
     }

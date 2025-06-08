@@ -119,20 +119,20 @@ namespace Quizerio.Infrastructure.Adapters
             _unitOfWork.Commit();
         }
 
+        public List<Quiz> GetUserQuizzes(ListOwnedQuizQuery query)
+        {
+            return _quizRepository.GetAll().Where(q => q.OwnerId == query.OwnerId).ToList();
+        }
+
         public Guid CreateQuizGame(CreateQuizGameCommand command)
         {
-            return _quizGameService.CreateQuizGame(command);
+            var id = _quizGameService.CreateQuizGame(command);
+            _unitOfWork.Commit();
+            return id;
         }
 
         public void AddPointsToParticipant(AddPointsToParticipantCommand command)
         {
-            // var quizGame = _quizGameService.GetQuizGame(command.GameId);
-            // var participant = quizGame.Participants.FirstOrDefault(x => x.Id == command.ParticipantId);
-            //
-            // if (participant == null)
-            // {
-            //     throw new ArgumentException("Invalid participant id");
-            // }
             _quizGameService.AddPointsToParticipant(command);
         }
 
@@ -151,9 +151,28 @@ namespace Quizerio.Infrastructure.Adapters
             _quizGameService.JoinQuizGame(command);
         }
 
-        public void StartQuizGame(ChangeQuizGameStateCommand command)
+        public Question? GetCurrentQuizQuestion(CurrentQuestionQuery query)
         {
-            _quizGameService.ChangeQuizGameState(command);
+            var quizGame = _quizGameService.GetQuizGame(query.QuizId);
+
+            if (quizGame == null)
+            {
+                throw new KeyNotFoundException($"No quiz game found with id {query.QuizId}");
+            }
+
+            return quizGame.CurrentQuestion();
+        }
+
+        public QuizGameParticipant? GetQuizWinner(QuizWinnerQuery query)
+        {
+            var quizGame = _quizGameService.GetQuizGame(query.QuizId);
+
+            if (quizGame == null)
+            {
+                throw new KeyNotFoundException($"No quiz game found with id {query.QuizId}");
+            }
+
+            return quizGame.Winner;
         }
 
         public List<Question> GetQuestions()

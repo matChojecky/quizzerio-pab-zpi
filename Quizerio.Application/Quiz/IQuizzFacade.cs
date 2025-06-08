@@ -23,6 +23,8 @@ namespace Quizerio.Application.Quiz
         
         void AddQuestionToQuiz(AddQuestionToQuizCommand command);
         
+        List<Domain.Quiz.Model.Quiz> GetUserQuizzes(ListOwnedQuizQuery query);
+        
         Guid CreateQuizGame(CreateQuizGameCommand command);
         
         void AddPointsToParticipant(AddPointsToParticipantCommand command);
@@ -32,6 +34,10 @@ namespace Quizerio.Application.Quiz
         void ChangeQuizGameState(ChangeQuizGameStateCommand command);
         
         void JoinQuizGame(JoinQuizGameCommand command);
+        
+        Question? GetCurrentQuizQuestion(CurrentQuestionQuery query);
+        
+        QuizGameParticipant? GetQuizWinner(QuizWinnerQuery query);
         
         
     }

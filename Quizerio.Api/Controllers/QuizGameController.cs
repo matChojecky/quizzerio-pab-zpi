@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
+using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 
 namespace Quizerio.Api.Controllers
@@ -22,9 +23,9 @@ namespace Quizerio.Api.Controllers
         {
             var command = new CreateQuizGameCommand(quizId);
             
-            _quizzFacade.CreateQuizGame(command);
+            var id = _quizzFacade.CreateQuizGame(command);
             
-            return CreatedAtAction(null, null);
+            return CreatedAtAction(null, id);
         }
 
         [HttpPatch]
@@ -71,6 +72,27 @@ namespace Quizerio.Api.Controllers
             _quizzFacade.JoinQuizGame(command);
             
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("{quizGameId}/winner")]
+        public IActionResult GetWinner(Guid quizGameId)
+        {
+            var query = new QuizWinnerQuery(quizGameId);
+            
+            var winner = _quizzFacade.GetQuizWinner(query);
+            
+            return Ok(winner);
+        }
+
+        [HttpGet]
+        [Route("{quizGameId}/current")]
+        public IActionResult GetCurrentQuizGame(Guid quizGameId)
+        {
+            var query = new CurrentQuestionQuery(quizGameId);
+            var question = _quizzFacade.GetCurrentQuizQuestion(query);
+            
+            return Ok(question);
         }
     }
 }

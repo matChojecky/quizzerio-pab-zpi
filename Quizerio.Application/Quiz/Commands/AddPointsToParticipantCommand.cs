@@ -2,7 +2,7 @@ namespace Quizerio.Application.Quiz.Commands
 {
     public class AddPointsToParticipantCommand
     {
-        public AddPointsToParticipantCommand(Guid gameId, Guid participantId, int points = 1)
+        public AddPointsToParticipantCommand(Guid gameId, Guid participantId, short points = 1)
         {
             GameId = gameId;
             ParticipantId = participantId;
@@ -13,6 +13,6 @@ namespace Quizerio.Application.Quiz.Commands
         
         public Guid ParticipantId { get; set; }
         
-        public int Points { get; set; }
+        public short Points { get; set; }
     }
 }
