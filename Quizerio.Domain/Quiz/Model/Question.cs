@@ -34,17 +34,17 @@ namespace Quizerio.Domain.Quiz.Model
             Category = category;
         }
 
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
 
-        public string QuestionText { get; private set; }
+        public string QuestionText { get; set; }
 
-        public QuestionStatus Status { get; private set; }
+        public QuestionStatus Status { get; set; }
 
-        public QuestionDifficulty Difficulty { get; private set; }
+        public QuestionDifficulty Difficulty { get; set; }
 
-        public List<Answer> Answers { get; private set; } = new();
+        public List<Answer> Answers { get; set; } = new();
 
-        public QuestionCategory Category { get; private set; }
+        public QuestionCategory Category { get; set; }
     }
 
     public record Answer
@@ -56,8 +56,8 @@ namespace Quizerio.Domain.Quiz.Model
             IsCorrect = isCorrect;
         }
 
-        public Guid Id { get; private set; }
-        public string Text { get; private set; }
+        public Guid Id { get; set; }
+        public string Text { get; set; }
         public bool IsCorrect { get; }
     }
 }

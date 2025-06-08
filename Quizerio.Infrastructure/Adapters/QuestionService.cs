@@ -35,7 +35,8 @@ namespace Quizerio.Infrastructure.Adapters
 
         public void AddQuestion(CreateQuestionCommand command)
         {
-            List<Answer> answers = command.Answers.Select(a => new Answer(Guid.NewGuid(), a.Text, a.IsCorrect)).ToList();
+            List<Answer> answers =
+                command.Answers.Select(a => new Answer(Guid.NewGuid(), a.Text, a.IsCorrect)).ToList();
             var category = _questionCategoryRepository.GetById(command.CategoryId);
 
             var question = new Question(
@@ -60,20 +61,22 @@ namespace Quizerio.Infrastructure.Adapters
         public void UpdateQuestion(UpdateQuestionCommand command)
         {
             var current = _questionRepository.GetById(command.Id);
-            
+
             var category = _questionCategoryRepository.GetById(command.CategoryId);
 
+            current.QuestionText = command.QuestionText;
+            current.Difficulty = command.Difficulty;
+            current.Answers = command.Answers.Select(a =>
+                new Answer(
+                    a.Id ?? throw new ArgumentException("Cannot perform update"),
+                    a.Text,
+                    a.IsCorrect
+                )
+            ).ToList();
             
-            var question = new Question(
-                current.Id,
-                command.QuestionText,
-                command.Difficulty,
-                QuestionStatus.Pending,
-                command.Answers.Select(a => new Answer(a.Id ?? throw new ArgumentException("Cannot perform update"), a.Text, a.IsCorrect)).ToList(),
-                category
-            );
-            
-            _questionRepository.Update(question);
+            current.Category = category;
+
+            _questionRepository.Update(current);
             _unitOfWork.Commit();
         }
 
