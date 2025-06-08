@@ -134,21 +134,25 @@ namespace Quizerio.Infrastructure.Adapters
         public void AddPointsToParticipant(AddPointsToParticipantCommand command)
         {
             _quizGameService.AddPointsToParticipant(command);
+            _unitOfWork.Commit();
         }
 
         public void GoToNextQuestion(GoToNextQuestionCommand command)
         {
             _quizGameService.GoToNextQuestion(command);
+            _unitOfWork.Commit();
         }
 
         public void ChangeQuizGameState(ChangeQuizGameStateCommand command)
         {
             _quizGameService.ChangeQuizGameState(command);
+            _unitOfWork.Commit();
         }
 
         public void JoinQuizGame(JoinQuizGameCommand command)
         {
             _quizGameService.JoinQuizGame(command);
+            _unitOfWork.Commit();
         }
 
         public Question? GetCurrentQuizQuestion(CurrentQuestionQuery query)
@@ -173,6 +177,11 @@ namespace Quizerio.Infrastructure.Adapters
             }
 
             return quizGame.Winner;
+        }
+
+        public List<QuizGameParticipant> GetQuizParticipants(ListQuizGameParticipants query)
+        {
+            return _quizGameService.GetQuizGameParticipants(query);
         }
 
         public List<Question> GetQuestions()

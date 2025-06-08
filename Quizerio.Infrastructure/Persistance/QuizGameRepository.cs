@@ -23,5 +23,25 @@ namespace Quizerio.Infrastructure.Persistance
                     )
                 );
         }
+
+        public new QuizGame GetById(Guid id)
+        {
+            var entity = QueryWithIncludes().FirstOrDefault(qg => qg.Id == id);
+
+            if (entity == null)
+            {
+                throw new KeyNotFoundException($"Quiz game with id {id} was not found.");
+            }
+            
+            return entity;
+        }
+
+        protected override IQueryable<QuizGame> QueryWithIncludes()
+        {
+            return _quizGames
+                .Include(q => q.Participants)
+                .Include("Questions.Category")
+                .Include(q => q.TemplateQuiz);
+        }
     }
 }

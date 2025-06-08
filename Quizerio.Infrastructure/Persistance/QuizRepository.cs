@@ -14,5 +14,21 @@ namespace Quizerio.Infrastructure.Persistance
             _dbContext = dbContext;
             _quizes = dbContext.Set<Quiz>();
         }
+        public new Quiz GetById(Guid id)
+        {
+            var entity = QueryWithIncludes().FirstOrDefault(q => q.Id == id);
+
+            if (entity == null)
+            {
+                throw new KeyNotFoundException($"Quiz with id {id} was not found.");
+            }
+            
+            return entity;
+        }
+
+        protected override IQueryable<Quiz> QueryWithIncludes()
+        {
+            return _quizes.Include(q => q.Questions);
+        }
     }
 }

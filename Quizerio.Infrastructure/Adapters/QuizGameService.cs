@@ -1,5 +1,6 @@
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
+using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 using Quizerio.Domain.Quiz.Ports;
 
@@ -83,6 +84,11 @@ namespace Quizerio.Infrastructure.Adapters
         public QuizGame GetQuizGame(Guid quizGameId)
         {
             return _quizGameRepository.GetById(quizGameId);
+        }
+
+        public List<QuizGameParticipant> GetQuizGameParticipants(ListQuizGameParticipants query)
+        {
+            return _quizGameRepository.GetById(query.QuizId).Participants;
         }
     }
 }

@@ -14,5 +14,6 @@ namespace Quizerio.Application.Quiz
 
         Question GetQuestion(GetQuestionQuery query);
         List<Question> GetQuestions(ListQuestionsQuery query);
+        
     }
 }

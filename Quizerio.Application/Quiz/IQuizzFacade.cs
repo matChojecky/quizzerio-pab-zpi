@@ -39,6 +39,8 @@ namespace Quizerio.Application.Quiz
         
         QuizGameParticipant? GetQuizWinner(QuizWinnerQuery query);
         
+        List<QuizGameParticipant> GetQuizParticipants(ListQuizGameParticipants query);
+        
         
     }
 }

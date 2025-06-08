@@ -73,6 +73,16 @@ namespace Quizerio.Api.Controllers
             
             return NoContent();
         }
+        
+        [HttpGet]
+        [Route("{quizGameId}/participants")]
+        public IActionResult GetParticipantsOfQuizGame(Guid quizGameId)
+        {
+            var query = new ListQuizGameParticipants(quizGameId);
+            var participants = _quizzFacade.GetQuizParticipants(query);
+            
+            return Ok(participants);
+        }
 
         [HttpGet]
         [Route("{quizGameId}/winner")]

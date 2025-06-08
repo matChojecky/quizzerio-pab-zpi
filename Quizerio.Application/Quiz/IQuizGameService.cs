@@ -1,4 +1,5 @@
 using Quizerio.Application.Quiz.Commands;
+using Quizerio.Application.Quiz.Queries;
 using Quizerio.Domain.Quiz.Model;
 
 namespace Quizerio.Application.Quiz
@@ -17,5 +18,7 @@ namespace Quizerio.Application.Quiz
         void JoinQuizGame(JoinQuizGameCommand command);
         
         QuizGame GetQuizGame(Guid quizGameId);
+        
+        List<QuizGameParticipant> GetQuizGameParticipants(ListQuizGameParticipants query);
     }
 }

@@ -13,7 +13,7 @@ namespace Quizerio.Infrastructure.Persistance
 
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuestionCategory> QuestionCategories { get; set; }
-        public DbSet<Quiz> Quizes { get; set; }
+        public DbSet<Quiz> Quizs { get; set; }
         public DbSet<QuizGame> QuizGames { get; set; }
         public DbSet<User> Users { get; set; }
 
