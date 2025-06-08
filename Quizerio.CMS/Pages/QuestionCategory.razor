@@ -89,11 +89,11 @@ else if (errorMessage != null)
         {
             questionsPerCategory.Clear();
             questionCategories = await Http.GetFromJsonAsync<List<QuestionCategoryDto>>("https://localhost:7180/QuestionCategory") ?? new();
-            var questions = await Http.GetFromJsonAsync<List<QuestionDto>>("https://localhost:7180/Question") ?? new();
+            var questions = await Http.GetFromJsonAsync<List<QuestionReadDto>>("https://localhost:7180/Question") ?? new();
 
             foreach (var category in questionCategories)
             {
-                questionsPerCategory.Add(category.Id, questions.Count(q => q.CategoryId == category.Id));
+                questionsPerCategory.Add(category.Id, questions.Count(q => q.Category.Id == category.Id));
             }
         }
         catch (Exception ex)

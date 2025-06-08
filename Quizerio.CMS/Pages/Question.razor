@@ -27,50 +27,104 @@
                 {
                     <tr class="@(q.Status == "Rejected" ? "table-warning" : "")">
                         <td class="fw-bold">@(questions.IndexOf(q) + 1)</td>
-                        <td>@q.QuestionText</td>
-                        <td>
-                            @(categories.FirstOrDefault(c => c.Id == q.CategoryId)?.Name ?? "N/A")
-                        </td>
-
-                        <td>@q.Difficulty</td>
-
-                        <td>
-                            <div class="d-flex flex-column gap-1">
-                                @foreach (var answer in q.Answers)
-                                {
-                                    <div class="@(answer.IsCorrect ? "text-start fw-bold" : "")">
-                                        @if (answer.IsCorrect)
-                                        {
-                                            <i class="oi oi-check"></i>
-                                        }
-                                        else
-                                        {
-                                            <i class="oi oi-x"></i>
-                                        }
-                                        @answer.Text
-                                    </div>
-                                }
-                            </div>
-                        </td>
-
-                        <td>@q.Status</td>
-
-                        <td>
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-primary" @onclick="@(e => ApproveQuestionAsync(q.Id))" title="Approve this question">
-                                    <i class="oi oi-circle-check"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary" @onclick="@(e => RejectQuestionAsync(q.Id))" title="Reject this question">
-                                    <i class="oi oi-circle-x"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" @onclick="@(e => DeleteQuestionAsync(q.Id))" title="Delete this question">
-                                    <i class="oi oi-trash"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-info" @onclick="@(e => EditQuestion(q.Id))" title="Edit this question">
-                                    <i class="oi oi-pencil"></i>
-                                </button>
-                            </div>
-                        </td>
+                        @if (editingQuestionId == q.Id)
+                        {
+                            <td>
+                                <input class="form-control form-control-sm" @bind="editedQuestion!.QuestionText" />
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm" @bind="editedQuestion!.Category.Id">
+                                    @foreach (var cat in categories)
+                                    {
+                                        <option value="@cat.Id">@cat.Name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm" @bind="editedQuestion!.Difficulty">
+                                    <option value="0">Easy</option>
+                                    <option value="1">Medium</option>
+                                    <option value="2">Hard</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column gap-1">
+                                    @for (int i = 0; i < editedQuestion!.Answers.Length; i++)
+                                    {
+                                        var index = i;
+                                        <div class="input-group input-group-sm">
+                                            <input type="radio"
+                                                   class="btn-check"
+                                                   name="editCorrectAnswer"
+                                                   id="edit-answer-@index"
+                                                   autocomplete="off"
+                                                   checked="@editedQuestion.Answers[index].IsCorrect"
+                                                   @onchange="() => SetEditedCorrectAnswer(index)" />
+                                            <label class="btn btn-outline-success input-group-text" for="edit-answer-@index">
+                                                <i class="oi oi-check"></i>
+                                            </label>
+                                            <input type="text"
+                                                   class="form-control form-control-sm"
+                                                   @bind="editedQuestion.Answers[index].Text" />
+                                        </div>
+                                    }
+                                </div>
+                            </td>
+                            <td>@q.Status</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success" @onclick="SaveEditedQuestion" title="Save changes">
+                                        <i class="oi oi-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" @onclick="CancelEdit" title="Cancel editing">
+                                        <i class="oi oi-x"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@q.QuestionText</td>
+                            <td>
+                                @(categories.FirstOrDefault(c => c.Id == q.Category.Id)?.Name ?? "N/A")
+                            </td>
+                            <td>@q.Difficulty</td>
+                            <td>
+                                <div class="d-flex flex-column gap-1">
+                                    @foreach (var answer in q.Answers)
+                                    {
+                                        <div class="@(answer.IsCorrect ? "text-start fw-bold" : "")">
+                                            @if (answer.IsCorrect)
+                                            {
+                                                <i class="oi oi-check"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="oi oi-x"></i>
+                                            }
+                                            @answer.Text
+                                        </div>
+                                    }
+                                </div>
+                            </td>
+                            <td>@q.Status</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-primary" @onclick="@(e => ApproveQuestionAsync(q.Id))" title="Approve this question">
+                                        <i class="oi oi-circle-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" @onclick="@(e => RejectQuestionAsync(q.Id))" title="Reject this question">
+                                        <i class="oi oi-circle-x"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" @onclick="@(e => DeleteQuestionAsync(q.Id))" title="Delete this question">
+                                        <i class="oi oi-trash"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info" @onclick="@(e => EditQuestion(q.Id))" title="Edit this question">
+                                        <i class="oi oi-pencil"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>
@@ -156,14 +210,23 @@ else if (errorMessage != null)
 
 @code {
 
-    private List<QuestionDto>? questions;
+    private List<QuestionReadDto>? questions;
     private bool isLoading = false;
     private string? errorMessage;
 
     private List<QuestionCategoryDto> categories = new();
-    private QuestionDto newQuestion = new();
+    private QuestionWriteDto newQuestion = new();
 
     private string? addQuestionMessage;
+
+    private Guid? editingQuestionId;
+    private QuestionReadDto? questionToEdit;
+    private QuestionReadDto? editedQuestion;
+
+    protected override void OnInitialized()
+    {
+        Http.BaseAddress = new Uri("https://localhost:7180/");
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -178,7 +241,7 @@ else if (errorMessage != null)
         questions = null;
         try
         {
-            questions = await Http.GetFromJsonAsync<List<QuestionDto>>("https://localhost:7180/Question");
+            questions = await Http.GetFromJsonAsync<List<QuestionReadDto>>("Question");
         }
         catch (Exception ex)
         {
@@ -191,7 +254,7 @@ else if (errorMessage != null)
     {
         try
         {
-            categories = await Http.GetFromJsonAsync<List<QuestionCategoryDto>>("https://localhost:7180/QuestionCategory") ?? new();
+            categories = await Http.GetFromJsonAsync<List<QuestionCategoryDto>>("QuestionCategory") ?? new();
         }
         catch
         {
@@ -231,13 +294,14 @@ else if (errorMessage != null)
             return;
         }
 
-        var writeModel = new QuestionDto
+        var writeModel = new QuestionWriteDto
         {
             QuestionText = newQuestion.QuestionText,
             Difficulty = newQuestion.Difficulty,
             CategoryId = newQuestion.CategoryId,
             Answers = newQuestion.Answers.Select(a => new AnswerDto
             {
+                Id = Guid.NewGuid(),
                 Text = a.Text,
                 IsCorrect = a.IsCorrect
             }).ToArray()
@@ -245,11 +309,11 @@ else if (errorMessage != null)
 
         try
         {
-            var response = await Http.PostAsJsonAsync("https://localhost:7180/Question", writeModel);
+            var response = await Http.PostAsJsonAsync("Question", writeModel);
             if (response.IsSuccessStatusCode)
             {
                 addQuestionMessage = "Question added successfully!";
-                newQuestion = new QuestionDto();
+                newQuestion = new();
                 await GetQuestionsAsync();
             }
             else
@@ -267,7 +331,7 @@ else if (errorMessage != null)
     {
         try
         {
-            var response = await Http.PatchAsync($"https://localhost:7180/Question/{questionId}/approve", null);
+            var response = await Http.PatchAsync($"Question/{questionId}/approve", null);
             if (response.IsSuccessStatusCode)
             {
                 await GetQuestionsAsync();
@@ -288,7 +352,7 @@ else if (errorMessage != null)
         try
         {
             var rejectContent = JsonContent.Create("CMS reject");
-            var response = await Http.PatchAsync($"https://localhost:7180/Question/{questionId}/reject", rejectContent);
+            var response = await Http.PatchAsync($"Question/{questionId}/reject", rejectContent);
 
             if (response.IsSuccessStatusCode)
             {
@@ -309,7 +373,7 @@ else if (errorMessage != null)
     {
         try
         {
-            var response = await Http.DeleteAsync($"https://localhost:7180/Question/{questionId}");
+            var response = await Http.DeleteAsync($"Question/{questionId}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -328,6 +392,107 @@ else if (errorMessage != null)
 
     private void EditQuestion(Guid questionId)
     {
-        //Figure out how to handle question editing
+        if (questions == null) return;
+        questionToEdit = questions.FirstOrDefault(q => q.Id == questionId);
+        if (questionToEdit == default) return;
+
+        editedQuestion = new QuestionReadDto
+        {
+            QuestionText = questionToEdit.QuestionText,
+            Category = { Id = questionToEdit.Category.Id, Name = questionToEdit.Category.Name },
+            Difficulty = questionToEdit.Difficulty,
+            Answers = questionToEdit.Answers.Select(a => new AnswerDto
+            {
+                Id = a.Id,
+                Text = a.Text,
+                IsCorrect = a.IsCorrect
+            }).ToArray()
+        };
+
+        editingQuestionId = questionId;
+    }
+
+    private void SetEditedCorrectAnswer(int selectedIndex)
+    {
+        if (editedQuestion == null) return;
+
+        for (int i = 0; i < editedQuestion.Answers.Length; i++)
+        {
+            editedQuestion.Answers[i].IsCorrect = (i == selectedIndex);
+        }
+    }
+
+    private async Task SaveEditedQuestion()
+    {
+        if (editedQuestion == null) return;
+
+        if (string.IsNullOrWhiteSpace(editedQuestion.QuestionText))
+        {
+            errorMessage = "Question field should not be empty!";
+            return;
+        }
+
+        if (editedQuestion.Category.Id == Guid.Empty)
+        {
+            errorMessage = "You must select a category!";
+            return;
+        }
+
+        if (editedQuestion.Answers.Length != 4 ||
+            editedQuestion.Answers.Any(a => string.IsNullOrWhiteSpace(a.Text)) ||
+            editedQuestion.Answers.Count(a => a.IsCorrect == true) != 1)
+        {
+            errorMessage = "You must provide exactly 4 answers, each answer must not be empty, and exactly one answer must be marked as correct!";
+            return;
+        }
+
+        try
+        {
+            QuestionWriteDto editedQuestionData = new QuestionWriteDto
+            {
+                QuestionText = editedQuestion.QuestionText,
+                Difficulty = editedQuestion.Difficulty,
+                CategoryId = editedQuestion.Category.Id,
+                Answers = editedQuestion.Answers.Select(a => new AnswerDto
+                {
+                    Id = a.Id,
+                    Text = a.Text,
+                    IsCorrect = a.IsCorrect
+                }).ToArray()
+            };
+            var response = await Http.PutAsJsonAsync($"Question/{editingQuestionId}", editedQuestionData);
+            if (response.IsSuccessStatusCode)
+            {
+                await GetQuestionsAsync();
+                CancelEdit();
+            }
+            else
+            {
+                errorMessage = $"Error updating question: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error updating question: {ex.Message}";
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editingQuestionId = null;
+        editedQuestion = null;
+        errorMessage = null;
+    }
+
+    private async Task GetQuestionToEditById(Guid questionId)
+    {
+        try
+        {
+            questionToEdit = await Http.GetFromJsonAsync<QuestionReadDto>($"Question/{questionId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error while fetching question: {ex.Message}";
+        }
     }
 }
