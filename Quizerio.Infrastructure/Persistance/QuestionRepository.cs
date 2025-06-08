@@ -24,6 +24,18 @@ namespace Quizerio.Infrastructure.Persistance
                 );
         }
 
+        public new Question GetById(Guid id)
+        {
+            var entity = QueryWithIncludes().FirstOrDefault(q => q.Id == id);
+
+            if (entity == null)
+            {
+                throw new KeyNotFoundException($"No question with id {id} could be found.");
+            }
+            
+            return entity;
+        }
+
         protected override IQueryable<Question> QueryWithIncludes()
         {
             return _questions.Include(q => q.Category);
