@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Quizerio.Api;
+using Quizerio.Api.Mappings;
 using Quizerio.Infrastructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services.AddServices();
 builder.Services
     .AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+
+builder.Services.AddAutoMapper(typeof(UserMappings));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

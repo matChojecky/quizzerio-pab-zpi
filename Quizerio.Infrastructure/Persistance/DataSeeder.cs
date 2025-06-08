@@ -14,12 +14,24 @@ namespace Quizerio.Infrastructure.Persistance
         public void Seed()
         {
             _context.Database.EnsureCreated();
+            
+            if (!_context.Database.CanConnect())
+            {
+                return;
+            }
+            
             SeedUsers();
+            
             _context.SaveChanges();
         }
 
         private void SeedUsers()
         {
+            if (_context.Users.Any())
+            {
+                return;
+            }
+            
             var users = new List<User>()
             {
                 new User(

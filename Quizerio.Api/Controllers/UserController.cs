@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Quizerio.Application.User;
 using Quizerio.Application.User.Commands;
@@ -13,11 +14,13 @@ namespace Quizerio.Api.Controllers
     {
         private readonly IUserFacade _userFacade;
         private readonly ILogger<UserController> _logger;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserFacade userFacade, ILogger<UserController> logger)
+        public UserController(IUserFacade userFacade, ILogger<UserController> logger, IMapper mapper)
         {
             _userFacade = userFacade;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -30,10 +33,12 @@ namespace Quizerio.Api.Controllers
         [HttpGet("{userId}")]
         public IActionResult GetUser(Guid userId)
         {
+            var user = _userFacade.GetUser(
+                new GetUserQuery(userId)
+            );
+                
             return Ok(
-                _userFacade.GetUser(
-                    new GetUserQuery(userId)
-                )
+                _mapper.Map<UserReadModel>(user)
             );
         }
 
@@ -45,20 +50,26 @@ namespace Quizerio.Api.Controllers
         }
 
         [HttpPut("{userId}")]
-        public IActionResult PutUser(Guid userId, [FromBody] UserDto userModel)
+        public IActionResult PutUser(Guid userId, [FromBody] UserWriteModel userWriteUserModel)
         {
             var current = _userFacade.GetUser(new GetUserQuery(userId));
             
             _userFacade.UpdateUser(
                 new UpdateUserCommand(
-                    userModel.Username,
-                    userModel.Email,
-                    userModel.Password,
+                    userWriteUserModel.Username,
+                    userWriteUserModel.Email,
+                    userWriteUserModel.Password,
                     userId
                 )
             );
             
             return Ok();
+        }
+
+        [HttpGet("{userId}/is-premium")]
+        public IActionResult IsPremiumUser(Guid userId)
+        {
+            return Ok(false);
         }
     }
 }

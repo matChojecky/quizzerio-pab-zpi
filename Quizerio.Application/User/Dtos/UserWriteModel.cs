@@ -1,9 +1,11 @@
 namespace Quizerio.Application.User.Dtos
 {
-    public class UserDto
+    public class UserWriteModel
     {
-        public UserDto() {}
-        public UserDto(string username, string email, string password)
+        public UserWriteModel() {}
+
+        
+        protected UserWriteModel(string username, string email, string password)
         {
             Username = username;
             Email = email;

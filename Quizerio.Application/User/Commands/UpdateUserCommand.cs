@@ -3,7 +3,7 @@ using Quizerio.Domain.User.Model;
 
 namespace Quizerio.Application.User.Commands
 {
-    public class UpdateUserCommand : UserDto
+    public class UpdateUserCommand : UserWriteModel
     {
         public Guid Id { get; set; }
         
