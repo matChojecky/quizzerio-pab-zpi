@@ -48,3 +48,4 @@ Quizerio.Api/Quizerio.db
 
 .vs/
 **/*.db
+.vscode/

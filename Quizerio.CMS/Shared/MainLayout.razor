@@ -1,10 +1,11 @@
 ﻿@inherits LayoutComponentBase
+@inject HttpClient Http
 
 <PageTitle>Quizerio.CMS</PageTitle>
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu/>
+        <NavMenu />
     </div>
 
     <main>
@@ -13,3 +14,10 @@
         </article>
     </main>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Http.BaseAddress = new Uri("https://localhost:7180/");
+    }
+}

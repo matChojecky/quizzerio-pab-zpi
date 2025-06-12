@@ -1,0 +1,146 @@
+﻿@page "/game-create"
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h1>@(QuizName ?? "Quiz")</h1>
+
+<h3>Participants</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th style="width: 180px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Participants.Count; i++)
+        {
+            var idx = i; // Fix closure issue
+            <tr>
+                <td>
+                    @if (EditIndex == idx)
+                    {
+                        <input class="form-control" @bind="EditName" @onkeydown="(e => HandleEditKeyDown(e, idx))" />
+                    }
+                    else
+                    {
+                        @Participants[idx]
+                    }
+                </td>
+                <td>
+                    @if (EditIndex == idx)
+                    {
+                        <button class="btn btn-success btn-sm me-2" @onclick="() => SaveEdit(idx)">Save</button>
+                        <button class="btn btn-secondary btn-sm" @onclick="CancelEdit">Cancel</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-warning btn-sm me-2" @onclick="() => EditParticipant(idx)">Edit</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteParticipant(idx)">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<input @bind="NewParticipant" placeholder="Enter participant name" @onkeydown="HandleKeyDown" />
+<button class="btn btn-primary ms-2" @onclick="AddParticipant">Add Participant</button>
+
+<br /><br />
+<button class="btn btn-success" @onclick="StartGame" disabled="@(!Participants.Any())">Start Game</button>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid? QuizGameId { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? QuizName { get; set; }
+
+    private List<string> Participants = new();
+    private string NewParticipant = string.Empty;
+
+    private int EditIndex = -1;
+    private string EditName = string.Empty;
+
+    private void AddParticipant()
+    {
+        if (!string.IsNullOrWhiteSpace(NewParticipant))
+        {
+            Participants.Add(NewParticipant.Trim());
+            NewParticipant = string.Empty;
+        }
+    }
+
+    private void EditParticipant(int index)
+    {
+        EditIndex = index;
+        EditName = Participants[index];
+    }
+
+    private void SaveEdit(int index)
+    {
+        if (!string.IsNullOrWhiteSpace(EditName))
+        {
+            Participants[index] = EditName.Trim();
+        }
+        EditIndex = -1;
+        EditName = string.Empty;
+    }
+
+    private void CancelEdit()
+    {
+        EditIndex = -1;
+        EditName = string.Empty;
+    }
+
+    private void DeleteParticipant(int index)
+    {
+        Participants.RemoveAt(index);
+        if (EditIndex == index)
+        {
+            EditIndex = -1;
+            EditName = string.Empty;
+        }
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            AddParticipant();
+        }
+    }
+
+    private void HandleEditKeyDown(KeyboardEventArgs e, int index)
+    {
+        if (e.Key == "Enter")
+        {
+            SaveEdit(index);
+        }
+        else if (e.Key == "Escape")
+        {
+            CancelEdit();
+        }
+    }
+
+    private async void StartGame()
+    {
+        if (QuizGameId == null)
+            return;
+
+        foreach (var participant in Participants)
+        {
+            // Send participant name as JSON string
+            @* var content = JsonContent.Create(participant); *@
+            await Http.PostAsJsonAsync($"QuizGame/{QuizGameId}/participant", new{participant});
+        }
+
+        await Http.PatchAsync($"QuizGame/{QuizGameId}/progress/start", null);
+
+        // Optionally, navigate to the game page or show a message
+    }
+}

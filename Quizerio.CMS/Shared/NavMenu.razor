@@ -1,4 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject HttpClient Http
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Quizerio.CMS</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -27,6 +28,8 @@
     </nav>
 </div>
 
+
+
 @code {
     private bool collapseNavMenu = true;
 
@@ -35,6 +38,11 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override void OnInitialized()
+    {
+        Http.BaseAddress = new Uri("https://localhost:7180/");
     }
 
 }

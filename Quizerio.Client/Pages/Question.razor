@@ -1,0 +1,277 @@
+﻿@page "/questions"
+@inject HttpClient Http
+
+<PageTitle>Questions</PageTitle>
+
+<h1>Questions</h1>
+
+<button class="btn btn-primary" @onclick="GetQuestionsAsync">Load current questions</button>
+
+@if (Questions != null)
+{
+    <div class="table-responsive-sm mt-4">
+        <table class="table table-striped table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Question</th>
+                    <th>Category</th>
+                    <th>Difficulty</th>
+                    <th>Answers</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var q in PagedQuestions)
+                {
+                    <tr class="@(q.Status == "Rejected" ? "table-warning" : "")">
+                        <td class="fw-bold">@(Questions.IndexOf(q) + 1)</td>
+
+
+                        <td>@q.QuestionText</td>
+                        <td>
+                            @(Categories.FirstOrDefault(c => c.Id == q.Category.Id)?.Name ?? "N/A")
+                        </td>
+                        <td>@q.Difficulty</td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                @foreach (var answer in q.Answers)
+                                {
+                                    <div class="@(answer.IsCorrect ? "text-start fw-bold" : "")">
+                                        @if (answer.IsCorrect)
+                                        {
+                                            <i class="oi oi-check"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="oi oi-x"></i>
+                                        }
+                                        @answer.Text
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                        <td>@q.Status</td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (TotalPages > 1)
+        {
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                        <button class="page-link" @onclick="() => ChangePage(CurrentPage - 1)">Previous</button>
+                    </li>
+                    @for (int i = 1; i <= TotalPages; i++)
+                    {
+                        <li class="page-item @(CurrentPage == i ? "active" : "")">
+                            <button class="page-link" @onclick="() => ChangePage(i)">@i</button>
+                        </li>
+                    }
+                    <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                        <button class="page-link" @onclick="() => ChangePage(CurrentPage + 1)">Next</button>
+                    </li>
+                </ul>
+            </nav>
+        }
+    </div>
+}
+else if (IsLoading)
+{
+    <div class="d-flex justify-content-center mt-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (ErrorMessage != null)
+{
+    <div class="alert alert-danger mt-4" role="alert">
+        <i class="oi oi-warning me-2"></i>
+        @ErrorMessage
+    </div>
+}
+
+<hr />
+
+<h2>Add new question</h2>
+<form>
+    <div class="mb-3">
+        <label>Question:</label>
+        <input class="form-control" @bind="NewQuestion.QuestionText" />
+    </div>
+
+    <div class="row">
+        <div class="col mb-3">
+            <label>Difficulty level:</label>
+            <select class="form-select" @bind="NewQuestion.Difficulty">
+                <option value="0">Easy</option>
+                <option value="1">Medium</option>
+                <option value="2">Hard</option>
+            </select>
+        </div>
+
+        <div class="col mb-3">
+            <label>Question category:</label>
+            <select class="form-select" @bind="NewQuestion.CategoryId">
+                <option value="">-- Question category --</option>
+                @foreach (var cat in Categories)
+                {
+                    <option value="@cat.Id">@cat.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Answers:</label>
+        @for (int i = 0; i < NewQuestion.Answers.Length; i++)
+        {
+            var index = i;
+            <div class="input-group mb-2">
+                <input type="radio" class="btn-check" name="correctAnswer" id="answer-@index" autocomplete="off"
+                    checked="@NewQuestion.Answers[index].IsCorrect" @onchange="() => SetCorrectAnswer(index)" />
+                <label class="btn btn-outline-success input-group-text" for="answer-@index">
+                    <i class="oi oi-check"></i>
+                </label>
+                <input type="text" class="form-control" placeholder="Answer #@(index + 1)"
+                    @bind="NewQuestion.Answers[index].Text" />
+            </div>
+        }
+    </div>
+</form>
+<button class="btn btn-success" @onclick="AddQuestionAsync">Add question</button>
+@if (AddQuestionMessage != null)
+{
+    <p>@AddQuestionMessage</p>
+}
+
+@code {
+
+    private bool IsLoading = false;
+    private string? ErrorMessage;
+
+    private List<QuestionReadDto>? Questions;
+    private List<QuestionCategoryDto> Categories = new();
+    private QuestionWriteDto NewQuestion = new();
+    private string? AddQuestionMessage;
+
+    // Pagination fields
+    private int CurrentPage = 1;
+    private int PageSize = 10;
+    private int TotalPages => Questions == null ? 1 : (int)Math.Ceiling(Questions.Count / (double)PageSize);
+
+    private IEnumerable<QuestionReadDto> PagedQuestions =>
+        Questions == null ? Enumerable.Empty<QuestionReadDto>() :
+        Questions.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
+
+    private void ChangePage(int page)
+    {
+        if (page < 1 || page > TotalPages)
+            return;
+        CurrentPage = page;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCategoriesAsync();
+        await GetQuestionsAsync();
+    }
+
+    private async Task GetQuestionsAsync()
+    {
+        IsLoading = true;
+        ErrorMessage = null;
+        Questions = null;
+        try
+        {
+            Questions = await Http.GetFromJsonAsync<List<QuestionReadDto>>("Question");
+            CurrentPage = 1; // Reset to first page on reload
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error while loading questions: {ex.Message}";
+        }
+        IsLoading = false;
+    }
+
+    private async Task GetCategoriesAsync()
+    {
+        try
+        {
+            Categories = await Http.GetFromJsonAsync<List<QuestionCategoryDto>>("QuestionCategory") ?? new();
+        }
+        catch
+        {
+            Categories = new();
+        }
+    }
+
+    private void SetCorrectAnswer(int selectedIndex)
+    {
+        for (int i = 0; i < NewQuestion.Answers.Length; i++)
+        {
+            NewQuestion.Answers[i].IsCorrect = (i == selectedIndex);
+        }
+    }
+
+    private async Task AddQuestionAsync()
+    {
+        AddQuestionMessage = null;
+
+        if (string.IsNullOrWhiteSpace(NewQuestion.QuestionText))
+        {
+            AddQuestionMessage = "Question field should not be empty!";
+            return;
+        }
+
+        if (NewQuestion.CategoryId == Guid.Empty)
+        {
+            AddQuestionMessage = "You must select a category!";
+            return;
+        }
+
+        if (NewQuestion.Answers.Length != 4 ||
+            NewQuestion.Answers.Any(a => string.IsNullOrWhiteSpace(a.Text)) ||
+            NewQuestion.Answers.Count(a => a.IsCorrect == true) != 1)
+        {
+            AddQuestionMessage = "You must provide exactly 4 answers, each answer must not be empty, and exactly one answer must be marked as correct!";
+            return;
+        }
+
+        var writeModel = new QuestionWriteDto
+        {
+            QuestionText = NewQuestion.QuestionText,
+            Difficulty = NewQuestion.Difficulty,
+            CategoryId = NewQuestion.CategoryId,
+            Answers = NewQuestion.Answers.Select(a => new AnswerDto
+            {
+                Id = Guid.NewGuid(),
+                Text = a.Text,
+                IsCorrect = a.IsCorrect
+            }).ToArray()
+        };
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("Question", writeModel);
+            if (response.IsSuccessStatusCode)
+            {
+                AddQuestionMessage = "Question added successfully!";
+                NewQuestion = new();
+                await GetQuestionsAsync();
+            }
+            else
+            {
+                AddQuestionMessage = $"Error: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            AddQuestionMessage = $"Error while adding question: {ex.Message}";
+        }
+    }
+}

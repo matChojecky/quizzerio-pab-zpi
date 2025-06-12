@@ -1,0 +1,164 @@
+﻿@page "/quiz-list"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>Quiz List</PageTitle>
+
+<h1>Quiz List</h1>
+
+<div class="mb-3">
+    <label>Owner ID:</label>
+    <input class="form-control" @bind="OwnerIdInput" />
+</div>
+<button class="btn btn-primary mb-3" @onclick="GetQuizzesByOwnerAsync">Load Quizzes</button>
+
+@if (!IsQuizLoading)
+{
+    <div class="table-responsive-sm">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Quiz Name</th>
+                    <th>Questions (with Category)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var quiz in Quizzes)
+                {
+                    <tr>
+                        <td>@quiz.Name</td>
+                        <td>
+                            <ul>
+                                @foreach (var q in quiz.Questions)
+                                {
+                                    <li>
+                                        @q.QuestionText
+                                        <span class="text-muted">
+                                            (@(Categories.FirstOrDefault(c => c.Id == q.CategoryId)?.Name ?? "N/A"))
+                                        </span>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <button class="btn btn-success" @onclick="() => StartQuiz(quiz.Id)">Start Quiz</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else if (IsQuizLoading)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else if (QuizErrorMessage != null)
+{
+    <div class="alert alert-danger">@QuizErrorMessage</div>
+}
+
+@code {
+    private string? OwnerIdInput = "edfc1028-e178-4416-a492-9ad5d3562cc1";
+    private List<QuizDto> Quizzes = new();
+    private bool IsQuizLoading = false;
+    private string? QuizErrorMessage;
+    private List<QuestionCategoryDto> Categories = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCategoriesAsync();
+    }
+
+    private async Task GetCategoriesAsync()
+    {
+        try
+        {
+            Categories = await Http.GetFromJsonAsync<List<QuestionCategoryDto>>("QuestionCategory") ?? new();
+        }
+        catch
+        {
+            Categories = new();
+        }
+    }
+
+    private async Task GetQuizzesByOwnerAsync()
+    {
+        QuizErrorMessage = null;
+        if (string.IsNullOrWhiteSpace(OwnerIdInput) || !Guid.TryParse(OwnerIdInput, out var ownerId))
+        {
+            QuizErrorMessage = "Please enter a valid Owner ID (GUID).";
+            return;
+        }
+        IsQuizLoading = true;
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "Quiz");
+            request.Headers.Add("X-User-Id", ownerId.ToString());
+            var response = await Http.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                Quizzes = await response.Content.ReadFromJsonAsync<List<QuizDto>>() ?? new();
+            }
+            else
+            {
+                QuizErrorMessage = $"Failed to load quizzes: {response.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            QuizErrorMessage = $"Error loading quizzes: {ex.Message}";
+        }
+        IsQuizLoading = false;
+    }
+
+    private async void StartQuiz(Guid quizId)
+    {
+        var quiz = Quizzes.FirstOrDefault(q => q.Id == quizId);
+        if (quiz != null)
+        {
+            try
+            {
+                var response = await Http.PostAsync($"QuizGame/{quizId}", null);
+                if (response.IsSuccessStatusCode)
+                {
+                    var quizGameId = await response.Content.ReadFromJsonAsync<Guid>();
+                    var url = $"/game-create?quizGameId={quizGameId}&quizName={Uri.EscapeDataString(quiz.Name)}";
+                    Navigation.NavigateTo(url);
+                }
+                else
+                {
+                    QuizErrorMessage = $"Failed to start quiz game: {response.ReasonPhrase}";
+                }
+            }
+            catch (Exception ex)
+            {
+                QuizErrorMessage = $"Error starting quiz game: {ex.Message}";
+            }
+        }
+    }
+
+    // DTOs for quizzes (adjust properties as needed)
+    public class QuizDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public List<QuizQuestionDto> Questions { get; set; } = new();
+    }
+
+    public class QuizQuestionDto
+    {
+        public Guid Id { get; set; }
+        public string QuestionText { get; set; } = string.Empty;
+        public Guid CategoryId { get; set; }
+    }
+
+    public class QuestionCategoryDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+}
