@@ -16,5 +16,7 @@ namespace Quizerio.Application.User
         
         List<Domain.User.Model.User> GetUsers();
         
+        string? AuthorizeUser(LoginUserCommand command);
+        
     }
 }

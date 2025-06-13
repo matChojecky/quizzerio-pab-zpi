@@ -11,5 +11,10 @@ namespace Quizerio.Infrastructure.Persistance
         {
             _context = context;
         }
+
+        public User? FindUserByEmail(string email)
+        {
+            return _context.Users.FirstOrDefault(x => x.Email == email);
+        }
     }
 }

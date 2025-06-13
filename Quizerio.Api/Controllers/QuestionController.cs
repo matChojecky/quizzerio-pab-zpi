@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Quizerio.Application.Quiz;
@@ -8,6 +9,7 @@ using Quizerio.Application.Quiz.Queries;
 
 namespace Quizerio.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class QuestionController : ControllerBase
@@ -36,6 +38,7 @@ namespace Quizerio.Api.Controllers
             return CreatedAtAction(null, null);
         }
 
+        [Authorize("Moderator")]
         [HttpPatch]
         [Route("{questionId}/approve")]
         public IActionResult Approve(Guid questionId)
@@ -46,6 +49,7 @@ namespace Quizerio.Api.Controllers
             return NoContent();
         }
 
+        [Authorize("Moderator")]
         [HttpPatch]
         [Route("{questionId}/reject")]
         public IActionResult Reject(Guid questionId, [FromBody] string reason)
@@ -56,6 +60,7 @@ namespace Quizerio.Api.Controllers
             return NoContent();
         }
 
+        [Authorize("Moderator")]
         [HttpPut]
         [Route("{questionId}")]
         public IActionResult Update(Guid questionId, [FromBody] QuestionWriteModel questionWriteModel)

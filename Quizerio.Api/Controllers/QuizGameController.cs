@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
@@ -6,6 +7,7 @@ using Quizerio.Domain.Quiz.Model;
 
 namespace Quizerio.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class QuizGameController : ControllerBase

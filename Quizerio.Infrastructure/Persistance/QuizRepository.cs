@@ -8,12 +8,13 @@ namespace Quizerio.Infrastructure.Persistance
     {
         private readonly EfDbContext _dbContext;
         private readonly DbSet<Quiz> _quizes;
-        
+
         public QuizRepository(EfDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
             _quizes = dbContext.Set<Quiz>();
         }
+
         public new Quiz GetById(Guid id)
         {
             var entity = QueryWithIncludes().FirstOrDefault(q => q.Id == id);
@@ -22,13 +23,18 @@ namespace Quizerio.Infrastructure.Persistance
             {
                 throw new KeyNotFoundException($"Quiz with id {id} was not found.");
             }
-            
+
             return entity;
         }
 
         protected override IQueryable<Quiz> QueryWithIncludes()
         {
-            return _quizes.Include(q => q.Questions);
+            return _quizes
+                .AsNoTracking()
+                .Include(q => q.Questions)
+                .ThenInclude(q => q.Answers)
+                .Include(q => q.Questions)
+                .ThenInclude(q => q.Category);
         }
     }
 }

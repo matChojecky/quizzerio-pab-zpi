@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Quizerio.Application.Quiz;
@@ -5,6 +6,7 @@ using Quizerio.Application.Quiz.Commands;
 
 namespace Quizerio.Api.Controllers
 {
+    [Authorize("Moderator")]
     [ApiController]
     [Route("[controller]")]
     public class QuestionCategoryController : ControllerBase

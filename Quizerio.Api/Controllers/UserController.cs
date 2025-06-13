@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quizerio.Application.User;
 using Quizerio.Application.User.Commands;
@@ -8,6 +9,7 @@ using Quizerio.Domain.User.Ports;
 
 namespace Quizerio.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -22,7 +24,8 @@ namespace Quizerio.Api.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-
+        
+        [Authorize("Admin")]
         [HttpGet]
         public IActionResult GetUsers()
         {
@@ -30,9 +33,11 @@ namespace Quizerio.Api.Controllers
         }
 
 
+        [Authorize]
         [HttpGet("{userId}")]
         public IActionResult GetUser(Guid userId)
         {
+            
             var user = _userFacade.GetUser(
                 new GetUserQuery(userId)
             );

@@ -1,10 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
 using Quizerio.Application.Quiz.Queries;
+using Quizerio.Domain.User.Model;
 
 namespace Quizerio.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class QuizController : ControllerBase
@@ -46,9 +49,11 @@ namespace Quizerio.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserQuizzes([FromHeader(Name = "X-User-Id")] Guid userId)
+        public IActionResult GetUserQuizzes()
         {
-            var query = new ListOwnedQuizQuery(userId);
+            var me = HttpContext.Items["CurrentUser"] as User ?? throw new UnauthorizedAccessException();
+
+            var query = new ListOwnedQuizQuery(me.Id);
             
             var quizes = _quizzFacade.GetUserQuizzes(query);
             return Ok(quizes);
