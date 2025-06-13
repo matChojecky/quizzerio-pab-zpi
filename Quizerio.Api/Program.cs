@@ -1,12 +1,17 @@
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
 using Quizerio.Api;
 using Quizerio.Api.Mappings;
 using Quizerio.Infrastructure.Persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .SetBasePath(Path.Combine(builder.Environment.ContentRootPath, ".."))
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
 // Add services to the container.
-builder.Services.AddServices();
+builder.Services.AddServices(builder.Configuration);
 builder.Services
     .AddControllers()
     .AddJsonOptions(opt => { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
@@ -14,7 +19,25 @@ builder.Services
 builder.Services.AddAutoMapper(typeof(UserMappings));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(o =>
+{
+    var jwtScheme = new OpenApiSecurityScheme
+    {
+        Scheme       = "bearer",
+        BearerFormat = "JWT",
+        In           = ParameterLocation.Header,
+        Name         = "Authorization",
+        Type         = SecuritySchemeType.Http,
+        Description  = "Paste token **without** the word Bearer",
+        Reference    = new() { Id = "Bearer", Type = ReferenceType.SecurityScheme }
+    };
+
+    o.AddSecurityDefinition("Bearer", jwtScheme);
+    o.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { jwtScheme, Array.Empty<string>() }
+    });
+});
 
 var app = builder.Build();
 
