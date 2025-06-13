@@ -1,5 +1,8 @@
 ﻿@page "/questions"
+@using Microsoft.Extensions.Logging
 @inject HttpClient Http
+@inject IJSRuntime JS
+@inject ILogger<Question> Logger
 
 <PageTitle>Questions</PageTitle>
 
@@ -179,6 +182,7 @@ else if (ErrorMessage != null)
     {
         await GetCategoriesAsync();
         await GetQuestionsAsync();
+        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
     }
 
     private async Task GetQuestionsAsync()
@@ -257,6 +261,8 @@ else if (ErrorMessage != null)
 
         try
         {
+            Logger.LogInformation("Adding new question: {@Question}", writeModel);
+            Logger.LogInformation($"Http.DefaultRequestHeaders.Authorization: {Http.DefaultRequestHeaders.Authorization}");
             var response = await Http.PostAsJsonAsync("Question", writeModel);
             if (response.IsSuccessStatusCode)
             {

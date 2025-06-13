@@ -67,7 +67,12 @@ app.UseAuthorization();
 app.UseMiddleware<CurrentUserMiddleware>();
 app.MapControllers();
 
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(x =>
+    x.AllowAnyHeader()
+     .AllowAnyMethod()
+     .WithOrigins("https://localhost:7129", "http://localhost:5082")
+     .AllowCredentials()
+);
 
 using (var scope = app.Services.CreateScope())
 {

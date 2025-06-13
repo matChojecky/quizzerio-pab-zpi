@@ -1,8 +1,10 @@
 ﻿@page "/login"
 @using System.ComponentModel.DataAnnotations
+@using Microsoft.Extensions.Logging
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
-@* @inject IHttpClientFactory clientFactory; *@
+@inject IJSRuntime JS
+@inject ILogger<Login> Logger
 
 <div class="container">
     <div class="row justify-content-center mt-5">
@@ -97,10 +99,39 @@
         errorMessage = null; // Clear any previous error
         try
         {
-            // TODO: Implement login logic using Http client
-            // var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
-            // if (response.IsSuccessStatusCode)
-            // NavigationManager.NavigateTo("/");
+            var response = await Http.PostAsJsonAsync("/Auth/login", new
+            {
+                Email = loginModel.Email,
+                Password = loginModel.Password
+            });
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Read token from response (assuming JSON: { "token": "..." })
+                var json = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                if (json?.access_token is not null)
+                {
+                    // Store token in localStorage
+                    await JS.InvokeVoidAsync("localStorage.setItem", "authToken", json.access_token);
+
+                    // Optionally, set Authorization header for HttpClient
+                    Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", json.access_token);
+                    Logger.LogInformation($"User logged in successfully. access_token: {json.access_token}");
+
+                    NavigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    errorMessage = "Login failed. No token received.";
+                }
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                errorMessage = !string.IsNullOrEmpty(errorContent)
+                    ? errorContent
+                    : "Login failed. Please check your credentials and try again.";
+            }
         }
         catch (Exception)
         {
@@ -125,7 +156,7 @@
             
             if (response.IsSuccessStatusCode)
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/", forceLoad: true);
             }
             else
             {
@@ -148,7 +179,6 @@
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(6)]
         public string Password { get; set; } = string.Empty;
     }
 
@@ -170,5 +200,10 @@
     private class UserModel : RegisterModel
     {
         public List<string> Roles { get; set; }
+    }
+
+    private class LoginResponse
+    {
+        public string access_token { get; set; }
     }
 }

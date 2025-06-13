@@ -1,5 +1,9 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.Extensions.Logging
 @inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+@inject ILogger<MainLayout> Logger
 
 <div class="page">
     <div class="sidebar">
@@ -8,7 +12,15 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="login" target="_self">Sign in</a>
+            @if (isAuthenticated)
+            {
+                <span>Hello, @username!</span>
+                <button class="btn btn-link ms-2" @onclick="SignOut">Sign out</button>
+            }
+            else
+            {
+                <a href="login" target="_self">Sign in</a>
+            }
         </div>
 
         <article class="content px-4">
@@ -18,8 +30,61 @@
 </div>
 
 @code {
-    protected override void OnInitialized()
+    private bool isAuthenticated = false;
+    private string? username;
+
+    protected override async Task OnInitializedAsync()
     {
         Http.BaseAddress = new Uri("https://localhost:7180/");
+
+        // Try to get token from localStorage
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "authToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            isAuthenticated = true;
+            username = ParseUsernameFromJwt(token);
+        }
+    }
+
+    private async Task SignOut()
+    {
+        await JS.InvokeVoidAsync("localStorage.removeItem", "authToken");
+        isAuthenticated = false;
+        username = null;
+        Logger.LogInformation("User singed out");
+        NavigationManager.NavigateTo("/");
+    }
+
+    private string? ParseUsernameFromJwt(string jwt)
+    {
+        try
+        {
+            var parts = jwt.Split('.');
+            if (parts.Length != 3)
+                return null;
+
+            var payload = parts[1];
+            // Pad base64 string if needed
+            switch (payload.Length % 4)
+            {
+                case 2: payload += "=="; break;
+                case 3: payload += "="; break;
+            }
+            var jsonBytes = Convert.FromBase64String(payload.Replace('-', '+').Replace('_', '/'));
+            var json = System.Text.Encoding.UTF8.GetString(jsonBytes);
+
+            var doc = System.Text.Json.JsonDocument.Parse(json);
+            if (doc.RootElement.TryGetProperty("unique_name", out var uniqueName))
+                return uniqueName.GetString();
+            if (doc.RootElement.TryGetProperty("sub", out var sub))
+                return sub.GetString();
+            if (doc.RootElement.TryGetProperty("email", out var email))
+                return email.GetString();
+        }
+        catch
+        {
+            // Ignore parse errors
+        }
+        return null;
     }
 }

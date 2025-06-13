@@ -1,7 +1,9 @@
 ﻿@page "/game-create"
+@using Microsoft.Extensions.Logging
 
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject ILogger<GameCreate> Logger
 
 <h1>@(QuizName ?? "Quiz")</h1>
 
@@ -135,8 +137,8 @@
         foreach (var participant in Participants)
         {
             // Send participant name as JSON string
-            @* var content = JsonContent.Create(participant); *@
-            await Http.PostAsJsonAsync($"QuizGame/{QuizGameId}/participant", new{participant});
+            Logger.LogInformation($"Adding participant: {participant} to quiz game {QuizGameId}");
+            await Http.PostAsJsonAsync($"QuizGame/{QuizGameId}/participants", new{participant});
         }
 
         await Http.PatchAsync($"QuizGame/{QuizGameId}/progress/start", null);
