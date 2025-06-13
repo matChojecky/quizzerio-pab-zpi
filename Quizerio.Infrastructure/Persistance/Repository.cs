@@ -36,7 +36,7 @@ namespace Quizerio.Infrastructure.Persistance
 
         public List<TEntity> GetAll(List<Expression<Func<TEntity, bool>>>? predicates = null)
         {
-            var query = QueryWithIncludes();
+            var query = QueryWithIncludes().AsNoTracking();
             if (predicates != null && predicates.Any())
             {
                 query = predicates.Aggregate(query, (current, predicate) => current.Where(predicate));
