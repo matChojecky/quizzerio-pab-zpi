@@ -51,7 +51,12 @@ namespace Quizerio.Api.Controllers
         [HttpGet]
         public IActionResult GetUserQuizzes()
         {
-            var me = HttpContext.Items["CurrentUser"] as User ?? throw new UnauthorizedAccessException();
+            var me = HttpContext.Items["CurrentUser"] as User;
+            
+            if (me == null)
+            {
+                return Unauthorized();
+            }
 
             var query = new ListOwnedQuizQuery(me.Id);
             

@@ -87,6 +87,7 @@ namespace Quizerio.Api.Controllers
             return NoContent();
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("{questionId}")]
         public IActionResult Get(Guid questionId)
@@ -98,6 +99,7 @@ namespace Quizerio.Api.Controllers
             return Ok(question);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetQuestions([FromQuery] ListQuestionsQuery query)
         {

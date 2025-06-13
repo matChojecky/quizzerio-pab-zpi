@@ -28,6 +28,7 @@ namespace Quizerio.Api.Controllers
             return CreatedAtAction(null, null);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult ListAll()
         {
