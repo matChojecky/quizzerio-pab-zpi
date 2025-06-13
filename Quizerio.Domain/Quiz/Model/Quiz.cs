@@ -25,6 +25,11 @@ namespace Quizerio.Domain.Quiz.Model
             {
                 return;
             }
+
+            if (question.Status != QuestionStatus.Approved)
+            {
+                return;
+            }
             
             Questions.Add(question);
         }
