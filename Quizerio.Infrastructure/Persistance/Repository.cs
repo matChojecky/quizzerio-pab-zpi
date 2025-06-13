@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Quizerio.Domain.Common;
 
@@ -33,9 +34,15 @@ namespace Quizerio.Infrastructure.Persistance
             return entity;
         }
 
-        public List<TEntity> GetAll()
+        public List<TEntity> GetAll(List<Expression<Func<TEntity, bool>>>? predicates = null)
         {
-            return QueryWithIncludes().ToList();
+            var query = QueryWithIncludes();
+            if (predicates != null && predicates.Any())
+            {
+                query = predicates.Aggregate(query, (current, predicate) => current.Where(predicate));
+            }
+            
+            return query.ToList();
         }
 
         public void Delete(Guid entityId)

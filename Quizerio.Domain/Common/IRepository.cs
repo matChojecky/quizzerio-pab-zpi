@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Quizerio.Domain.Common
 {
@@ -11,7 +10,7 @@ namespace Quizerio.Domain.Common
 
         TEntity GetById(Guid id);
 
-        List<TEntity> GetAll();
+        List<TEntity> GetAll(List<Expression<Func<TEntity, bool>>>? predicate = null);
 
         void Delete(Guid id);
     }

@@ -60,6 +60,8 @@ namespace Quizerio.Api
         {
             var jwtSettings = configuration.GetSection("Jwt").Get<JwtSettings>();
             
+            Console.WriteLine(jwtSettings);
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(o =>
                 {

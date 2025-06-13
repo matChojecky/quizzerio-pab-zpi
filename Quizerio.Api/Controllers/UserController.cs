@@ -5,6 +5,7 @@ using Quizerio.Application.User;
 using Quizerio.Application.User.Commands;
 using Quizerio.Application.User.Dtos;
 using Quizerio.Application.User.Queries;
+using Quizerio.Domain.User.Model;
 using Quizerio.Domain.User.Ports;
 
 namespace Quizerio.Api.Controllers
@@ -24,26 +25,45 @@ namespace Quizerio.Api.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-        
+
         [Authorize("Admin")]
         [HttpGet]
         public IActionResult GetUsers()
         {
-            return Ok(_userFacade.GetUsers());
+            return Ok(
+                _userFacade
+                    .GetUsers()
+                    .Select(
+                        u => _mapper.Map<UserReadModel>(u)
+                    )
+            );
         }
 
 
-        [Authorize]
+        [Authorize("Admin")]
         [HttpGet("{userId}")]
         public IActionResult GetUser(Guid userId)
         {
-            
             var user = _userFacade.GetUser(
                 new GetUserQuery(userId)
             );
-                
+
             return Ok(
                 _mapper.Map<UserReadModel>(user)
+            );
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            if (HttpContext.Items["CurrentUser"] is not User me)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(
+                _mapper.Map<UserReadModel>(me)
             );
         }
 
@@ -58,7 +78,7 @@ namespace Quizerio.Api.Controllers
         public IActionResult PutUser(Guid userId, [FromBody] UserWriteModel userWriteUserModel)
         {
             var current = _userFacade.GetUser(new GetUserQuery(userId));
-            
+
             _userFacade.UpdateUser(
                 new UpdateUserCommand(
                     userWriteUserModel.Username,
@@ -67,7 +87,7 @@ namespace Quizerio.Api.Controllers
                     userId
                 )
             );
-            
+
             return Ok();
         }
 

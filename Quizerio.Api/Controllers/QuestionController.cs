@@ -99,9 +99,8 @@ namespace Quizerio.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetQuestions()
+        public IActionResult GetQuestions([FromQuery] ListQuestionsQuery query)
         {
-            var query = new ListQuestionsQuery();
             var questions = _quizzFacade.GetQuestions(query);
             return Ok(questions);
         }

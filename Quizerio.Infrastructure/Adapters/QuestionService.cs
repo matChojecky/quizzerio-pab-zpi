@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Quizerio.Application;
 using Quizerio.Application.Quiz;
 using Quizerio.Application.Quiz.Commands;
@@ -87,7 +88,19 @@ namespace Quizerio.Infrastructure.Adapters
 
         public List<Question> GetQuestions(ListQuestionsQuery query)
         {
-            return _questionRepository.GetAll();
+            var filters = new List<Expression<Func<Question, bool>>>();
+            
+            if (query.Difficulty is { } difficulty)
+            {
+                filters.Add(q => q.Difficulty == difficulty);
+            }
+
+            if (query.Status is { } status)
+            {
+                filters.Add(q => q.Status == status);
+            }
+            
+            return _questionRepository.GetAll(filters);
         }
     }
 }

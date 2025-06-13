@@ -1,15 +1,17 @@
 using System.Security.Claims;
+using Quizerio.Application.User;
+using Quizerio.Application.User.Queries;
 using Quizerio.Domain.User.Ports;
 
 namespace Quizerio.Api.Middleware
 {
     public class CurrentUserMiddleware : IMiddleware
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserFacade _userFacade;
 
-        public CurrentUserMiddleware(IUserRepository userRepository)
+        public CurrentUserMiddleware(IUserFacade userFacade)
         {
-            _userRepository = userRepository;
+            _userFacade = userFacade;
         }
 
         public async Task InvokeAsync(HttpContext ctx, RequestDelegate next)
@@ -20,7 +22,7 @@ namespace Quizerio.Api.Middleware
                 Console.WriteLine(idClaim);
                 if (Guid.TryParse(idClaim, out var id))
                 {
-                    var user = _userRepository.GetById(id);
+                    var user = _userFacade.GetUser(new GetUserQuery(id));
                     ctx.Items["CurrentUser"] = user;
                 }
             }
