@@ -76,10 +76,6 @@
             var doc = System.Text.Json.JsonDocument.Parse(json);
             if (doc.RootElement.TryGetProperty("unique_name", out var uniqueName))
                 return uniqueName.GetString();
-            if (doc.RootElement.TryGetProperty("sub", out var sub))
-                return sub.GetString();
-            if (doc.RootElement.TryGetProperty("email", out var email))
-                return email.GetString();
         }
         catch
         {

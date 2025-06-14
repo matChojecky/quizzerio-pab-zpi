@@ -70,7 +70,7 @@ app.MapControllers();
 app.UseCors(x =>
     x.AllowAnyHeader()
      .AllowAnyMethod()
-     .WithOrigins("https://localhost:7129", "http://localhost:5082")
+     .WithOrigins("https://localhost:7129", "http://localhost:5082","https://localhost:7034", "http://localhost:5293")
      .AllowCredentials()
 );
 

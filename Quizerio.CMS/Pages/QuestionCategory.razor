@@ -1,6 +1,7 @@
 ﻿@page "/categories"
 
 @inject HttpClient Http
+@inject IJSRuntime JS
 
 <PageTitle>Categories</PageTitle>
 
@@ -78,6 +79,7 @@ else if (errorMessage != null)
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
         await GetQuestionCategoryAsync();
     }
 

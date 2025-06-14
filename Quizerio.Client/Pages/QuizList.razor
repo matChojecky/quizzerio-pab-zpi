@@ -1,15 +1,12 @@
 ﻿@page "/quiz-list"
 @inject HttpClient Http
+@inject IJSRuntime JS
 @inject NavigationManager Navigation
 
 <PageTitle>Quiz List</PageTitle>
 
 <h1>Quiz List</h1>
 
-<div class="mb-3">
-    <label>Owner ID:</label>
-    <input class="form-control" @bind="OwnerIdInput" />
-</div>
 <button class="btn btn-primary mb-3" @onclick="GetQuizzesByOwnerAsync">Load Quizzes</button>
 
 @if (!IsQuizLoading)
@@ -35,7 +32,14 @@
                                     <li>
                                         @q.QuestionText
                                         <span class="text-muted">
-                                            (@(Categories.FirstOrDefault(c => c.Id == q.CategoryId)?.Name ?? "N/A"))
+                                            @if (q.Category != null)
+                                            {
+                                                @($"({q.Category.Name})")
+                                            }
+                                            else
+                                            {
+                                                <span class="text-danger">No category</span>
+                                            }
                                         </span>
                                     </li>
                                 }
@@ -62,7 +66,7 @@ else if (QuizErrorMessage != null)
 }
 
 @code {
-    private string? OwnerIdInput = "edfc1028-e178-4416-a492-9ad5d3562cc1";
+    private string OwnerId = string.Empty;
     private List<QuizDto> Quizzes = new();
     private bool IsQuizLoading = false;
     private string? QuizErrorMessage;
@@ -70,7 +74,11 @@ else if (QuizErrorMessage != null)
 
     protected override async Task OnInitializedAsync()
     {
+        Http.BaseAddress = new Uri("https://localhost:7180/");
+        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
         await GetCategoriesAsync();
+        await GetQuizzesByOwnerAsync();
+        OwnerId = await Quizerio.Client.Helpers.AuthHelper.GetUserIdAsync(JS);
     }
 
     private async Task GetCategoriesAsync()
@@ -88,25 +96,10 @@ else if (QuizErrorMessage != null)
     private async Task GetQuizzesByOwnerAsync()
     {
         QuizErrorMessage = null;
-        if (string.IsNullOrWhiteSpace(OwnerIdInput) || !Guid.TryParse(OwnerIdInput, out var ownerId))
-        {
-            QuizErrorMessage = "Please enter a valid Owner ID (GUID).";
-            return;
-        }
         IsQuizLoading = true;
         try
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "Quiz");
-            request.Headers.Add("X-User-Id", ownerId.ToString());
-            var response = await Http.SendAsync(request);
-            if (response.IsSuccessStatusCode)
-            {
-                Quizzes = await response.Content.ReadFromJsonAsync<List<QuizDto>>() ?? new();
-            }
-            else
-            {
-                QuizErrorMessage = $"Failed to load quizzes: {response.ReasonPhrase}";
-            }
+            Quizzes = await Http.GetFromJsonAsync<List<QuizDto>>("Quiz") ?? new();
         }
         catch (Exception ex)
         {
@@ -141,7 +134,6 @@ else if (QuizErrorMessage != null)
         }
     }
 
-    // DTOs for quizzes (adjust properties as needed)
     public class QuizDto
     {
         public Guid Id { get; set; }
@@ -153,7 +145,7 @@ else if (QuizErrorMessage != null)
     {
         public Guid Id { get; set; }
         public string QuestionText { get; set; } = string.Empty;
-        public Guid CategoryId { get; set; }
+        public QuestionCategoryDto Category { get; set; } = new();
     }
 
     public class QuestionCategoryDto

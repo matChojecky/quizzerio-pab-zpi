@@ -180,9 +180,9 @@ else if (ErrorMessage != null)
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
         await GetCategoriesAsync();
         await GetQuestionsAsync();
-        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
     }
 
     private async Task GetQuestionsAsync()

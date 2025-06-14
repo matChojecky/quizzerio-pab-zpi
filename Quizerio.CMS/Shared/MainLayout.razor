@@ -1,14 +1,30 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.Extensions.Logging
 @inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+@inject ILogger<MainLayout> Logger
 
 <PageTitle>Quizerio.CMS</PageTitle>
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <NavMenu/>
     </div>
 
     <main>
+        <div class="top-row px-4">
+            @if (isAuthenticated)
+            {
+                <span>Hello, @username!</span>
+                <button class="btn btn-link ms-2" @onclick="SignOut">Sign out</button>
+            }
+            else
+            {
+                <a href="login" target="_self">Sign in</a>
+            }
+        </div>
+
         <article class="content px-4">
             @Body
         </article>
@@ -16,8 +32,62 @@
 </div>
 
 @code {
+    private bool isAuthenticated = false;
+    private string? username;
+    private string token = string.Empty;
+
     protected override void OnInitialized()
     {
         Http.BaseAddress = new Uri("https://localhost:7180/");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        token = await JS.InvokeAsync<string>("localStorage.getItem", "authToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            isAuthenticated = true;
+            username = ParseUsernameFromJwt(token);
+            StateHasChanged(); // Trigger re-render if needed
+        }
+    }
+
+    private async Task SignOut()
+    {
+        await JS.InvokeVoidAsync("localStorage.removeItem", "authToken");
+        isAuthenticated = false;
+        username = null;
+        token = string.Empty;
+        Logger.LogInformation("User singed out");
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+
+    private string? ParseUsernameFromJwt(string jwt)
+    {
+        try
+        {
+            var parts = jwt.Split('.');
+            if (parts.Length != 3)
+                return null;
+
+            var payload = parts[1];
+            // Pad base64 string if needed
+            switch (payload.Length % 4)
+            {
+                case 2: payload += "=="; break;
+                case 3: payload += "="; break;
+            }
+            var jsonBytes = Convert.FromBase64String(payload.Replace('-', '+').Replace('_', '/'));
+            var json = System.Text.Encoding.UTF8.GetString(jsonBytes);
+
+            var doc = System.Text.Json.JsonDocument.Parse(json);
+            if (doc.RootElement.TryGetProperty("unique_name", out var uniqueName))
+                return uniqueName.GetString();
+        }
+        catch
+        {
+            // Ignore parse errors
+        }
+        return null;
     }
 }

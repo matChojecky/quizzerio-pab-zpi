@@ -1,5 +1,6 @@
 ﻿@page "/questions"
 @inject HttpClient Http
+@inject IJSRuntime JS
 
 <PageTitle>Questions</PageTitle>
 
@@ -285,6 +286,13 @@ else if (ErrorMessage != null)
     {
         Http.BaseAddress = new Uri("https://localhost:7180/");
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
+        await GetCategoriesAsync();
+        await GetQuestionsAsync();
+    }
     // Filtering logic
     private IEnumerable<QuestionReadDto> FilteredQuestions =>
         Questions == null ? Enumerable.Empty<QuestionReadDto>() :
@@ -314,12 +322,6 @@ else if (ErrorMessage != null)
         selectedStatus = "";
         selectedCategoryId = "";
         CurrentPage = 1;
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await GetCategoriesAsync();
-        await GetQuestionsAsync();
     }
 
     private async Task GetQuestionsAsync()

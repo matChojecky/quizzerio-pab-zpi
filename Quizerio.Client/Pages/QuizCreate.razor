@@ -1,5 +1,6 @@
 ﻿@page "/quiz-create"
 @inject HttpClient Http
+@inject IJSRuntime JS
 
 <PageTitle>Quiz</PageTitle>
 
@@ -70,13 +71,16 @@ else
     private QuizWriteDto NewQuiz = new();
     private string? Message;
     private bool IsLoading = true;
+    private string OwnerId = string.Empty;
 
     private string selectedCategoryId = "";
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
         await LoadCategoriesAsync();
         await LoadQuestionsAsync();
+        OwnerId = await Quizerio.Client.Helpers.AuthHelper.GetUserIdAsync(JS);
     }
 
     private async Task LoadQuestionsAsync()
@@ -136,11 +140,16 @@ else
             Message = "Please select at least one question.";
             return;
         }
+        if (string.IsNullOrWhiteSpace(OwnerId) || !Guid.TryParse(OwnerId, out _))
+        {
+            Message = "Owner ID could not be identified. Please log in and try again.";
+            return;
+        }
 
         QuizWriteDto createQuizCommand = new QuizWriteDto
         {
             Name = NewQuiz.Name,
-            OwnerId = Guid.Parse("edfc1028-e178-4416-a492-9ad5d3562cc1"), // Hardcoded GUID
+            OwnerId = Guid.Parse(OwnerId),
             Questions = NewQuiz.Questions
         };
 

@@ -91,7 +91,7 @@
 
     protected override void OnInitialized()
     {
-        // Http.BaseAddress = new Uri("https:localhost:7180/");
+        Http.BaseAddress = new Uri("https://localhost:7180/");
     }
 
     private async Task HandleLogin()
@@ -114,6 +114,7 @@
                     // Store token in localStorage
                     await JS.InvokeVoidAsync("localStorage.setItem", "authToken", json.access_token);
 
+                    // Optionally, set Authorization header for HttpClient
                     Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", json.access_token);
                     Logger.LogInformation($"User logged in successfully. access_token: {json.access_token}");
 
