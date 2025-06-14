@@ -30,7 +30,6 @@ namespace Quizerio.Infrastructure.Persistance
         protected override IQueryable<Quiz> QueryWithIncludes()
         {
             return _quizes
-                .AsNoTracking()
                 .Include(q => q.Questions)
                 .ThenInclude(q => q.Answers)
                 .Include(q => q.Questions)
