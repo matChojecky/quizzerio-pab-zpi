@@ -1,0 +1,163 @@
+﻿@page "/game"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using Microsoft.Extensions.Logging
+@using Quizerio.Client.Helpers
+
+@inject HttpClient Http
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject ILogger<Game> Logger
+
+<h1>@(QuizName ?? "Quiz")</h1>
+
+@if (isLoading)
+{
+    <p>Loading current question...</p>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (CurrentQuestion != null)
+{
+    <div style="font-size: 4rem; font-weight: bold; text-align: center; margin-top: 2rem;">
+        @CurrentQuestion.QuestionText
+    </div>
+    <div style="font-size: 2rem; text-align: center;">
+        @CurrentQuestion.Category.Name
+    </div>
+    <div class="mt-4 d-flex justify-content-center">
+        <button class="btn btn-primary" @onclick="StartTimer" disabled="@isTimerRunning">Start 30s Timer</button>
+    </div>
+    @if (isTimerVisible)
+    {
+        <div style="font-size: 2.5rem; text-align: center; margin-top: 1rem;">
+            Time left: <span>@timerSeconds</span> s
+        </div>
+    }
+    <div class="mt-5 d-flex justify-content-center">
+        @if (CurrentQuestion.Answers != null && CurrentQuestion.Answers.Count == 4)
+        {
+            <div class="table-responsive" style="max-width: 600px; margin: 0 auto;">
+                <table class="table table-bordered text-center align-middle" style="font-size: 2rem;">
+                    <tbody>
+                        <tr>
+                            <td>@CurrentQuestion.Answers[0].Text</td>
+                            <td>@CurrentQuestion.Answers[1].Text</td>
+                        </tr>
+                        <tr>
+                            <td>@CurrentQuestion.Answers[2].Text</td>
+                            <td>@CurrentQuestion.Answers[3].Text</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>No answers available.</p>
+        }
+    </div>
+}
+else
+{
+    <p>No question available.</p>
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid? QuizGameId { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? QuizName { get; set; }
+
+    private QuestionDto? CurrentQuestion;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    // Timer state
+    private int timerSeconds = 30;
+    private bool isTimerRunning = false;
+    private bool isTimerVisible = false;
+    private System.Threading.Timer? timer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Http.BaseAddress = new Uri("https://localhost:7180/");
+        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
+        await LoadQuestionAsync();
+    }
+
+    private async Task LoadQuestionAsync()
+    {
+        if (QuizGameId == null)
+        {
+            errorMessage = "QuizGameId is missing.";
+            isLoading = false;
+            return;
+        }
+
+        try
+        {
+            CurrentQuestion = await Http.GetFromJsonAsync<QuestionDto>($"QuizGame/{QuizGameId}/current");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error fetching current question");
+            errorMessage = "An error occurred while loading the question.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void StartTimer()
+    {
+        timerSeconds = 30;
+        isTimerRunning = true;
+        isTimerVisible = true;
+        timer?.Dispose();
+        timer = new System.Threading.Timer(async _ =>
+        {
+            if (timerSeconds > 0)
+            {
+                timerSeconds--;
+                await InvokeAsync(StateHasChanged);
+            }
+            if (timerSeconds == 0)
+            {
+                isTimerRunning = false;
+                timer?.Dispose();
+                await InvokeAsync(StateHasChanged);
+            }
+        }, null, 1000, 1000);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+
+    public class QuestionDto
+    {
+        public string QuestionText { get; set; }
+        public CategoryDto Category { get; set; }
+        public List<AnswerDto> Answers { get; set; }
+    }
+
+    public class AnswerDto
+    {
+        public string Text { get; set; }
+
+        public bool IsCorrect { get; set; }
+    }
+
+    public class CategoryDto
+    {
+        public string Name { get; set; }
+    }
+}

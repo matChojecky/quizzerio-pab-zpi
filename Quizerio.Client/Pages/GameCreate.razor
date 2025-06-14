@@ -3,6 +3,7 @@
 
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 @inject ILogger<GameCreate> Logger
 
 <h1>@(QuizName ?? "Quiz")</h1>
@@ -67,6 +68,12 @@
 
     private int EditIndex = -1;
     private string EditName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Http.BaseAddress = new Uri("https://localhost:7180/");
+        await AuthHelper.SetAuthorizationHeaderAsync(Http, JS);
+    }
 
     private void AddParticipant()
     {
@@ -143,6 +150,6 @@
 
         await Http.PatchAsync($"QuizGame/{QuizGameId}/progress/start", null);
 
-        // Optionally, navigate to the game page or show a message
+        Navigation.NavigateTo($"/game?QuizGameId={QuizGameId}&QuizName={Uri.EscapeDataString(QuizName ?? "Quiz")}");
     }
 }
