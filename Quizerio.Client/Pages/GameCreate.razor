@@ -138,7 +138,7 @@
         {
             // Send participant name as JSON string
             Logger.LogInformation($"Adding participant: {participant} to quiz game {QuizGameId}");
-            await Http.PostAsJsonAsync($"QuizGame/{QuizGameId}/participants", new{participant});
+            await Http.PostAsJsonAsync($"QuizGame/{QuizGameId}/participants", participant);
         }
 
         await Http.PatchAsync($"QuizGame/{QuizGameId}/progress/start", null);
